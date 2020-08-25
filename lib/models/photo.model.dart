@@ -33,7 +33,7 @@ class Photo {
       color: json['color'],
       likes: json['likes'],
       description: json['description'],
-      likedByUser: json['liked_by_user'] == 'true',
+      likedByUser: json['liked_by_user'],
       urls: _Urls.fromJson(json['urls']),
       links: _Links.fromJson(json['links']),
       user: InlineUser.fromJson(json['user']),

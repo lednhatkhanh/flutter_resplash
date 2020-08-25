@@ -2,7 +2,7 @@ import 'inline_user.model.dart';
 import 'photo.model.dart';
 
 class Collection {
-  final String id;
+  final int id;
   final String title;
   final String description;
   final DateTime publishedAt;
@@ -33,9 +33,9 @@ class Collection {
       id: json['id'],
       title: json['title'],
       description: json['description'],
-      publishedAt: json['published_at'],
-      lastCollectedAt: json['last_collection_at'],
-      updatedAt: json['updated_at'],
+      publishedAt: DateTime.parse(json['published_at']),
+      lastCollectedAt: DateTime.parse(json['last_collected_at']),
+      updatedAt: DateTime.parse(json['updated_at']),
       totalPhotos: json['total_photos'],
       private: json['private'],
       shareKey: json['share_key'],

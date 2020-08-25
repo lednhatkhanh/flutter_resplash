@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-import 'package:re_splash/widgets/photo_list.dart';
+import 'package:re_splash/widgets/photo_item.dart';
+import 'package:re_splash/widgets/item_list.dart';
 import 'package:re_splash/services/photos.service.dart';
 import 'package:re_splash/models/photo.model.dart';
 
@@ -80,6 +80,9 @@ class _SearchRouteState extends State<SearchRoute> {
     _loadMorePhotos();
   }
 
+  Widget _renderPhotoItem({Photo item, double width}) =>
+      PhotoItem(photo: item, width: width);
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -128,11 +131,12 @@ class _SearchRouteState extends State<SearchRoute> {
             child: Column(
               children: [
                 Expanded(
-                  child: PhotoList(
-                    photos: _photos,
+                  child: ItemList<Photo>(
+                    items: _photos,
                     loadMore: _handleLoadMore,
                     canLoadMore: _canLoadMore,
                     isLoading: _isLoading,
+                    renderItem: _renderPhotoItem,
                   ),
                 ),
               ],

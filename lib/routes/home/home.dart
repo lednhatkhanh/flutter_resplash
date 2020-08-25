@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:re_splash/models/collection.model.dart';
 import 'package:re_splash/routes/home/oder_by_modal_content.dart';
-import 'package:re_splash/widgets/photo_list.dart';
+import 'package:re_splash/services/collections.service.dart';
+import 'package:re_splash/widgets/collection_item.dart';
+import 'package:re_splash/widgets/photo_item.dart';
+import 'package:re_splash/widgets/item_list.dart';
 import 'package:re_splash/models/photo.model.dart';
 import 'package:re_splash/services/photos.service.dart';
 import 'package:re_splash/routes/search.dart';
@@ -16,7 +20,9 @@ const int PER_PAGE = 15;
 
 class _HomeRouteState extends State<HomeRoute> {
   final PhotosService _photoService = PhotosService();
+  final CollectionsService _collectionsService = CollectionsService();
 
+  List<Collection> _collections;
   List<Photo> _photos;
   bool _isLoading;
   GetPhotosOrderBy _orderBy;
@@ -29,6 +35,7 @@ class _HomeRouteState extends State<HomeRoute> {
     _orderBy = GetPhotosOrderBy.latest;
 
     _getPhotos();
+    _getCollections();
   }
 
   Future<void> _getPhotos() async {
@@ -72,8 +79,45 @@ class _HomeRouteState extends State<HomeRoute> {
     } catch (_) {}
   }
 
-  void _handleLoadMore() {
-    _getMorePhotos();
+  Future<void> _getCollections() async {
+    try {
+      setState(() {
+        _isLoading = true;
+        _collections = [];
+      });
+
+      final List<Collection> collections =
+          await _collectionsService.listCollections(
+        page: 1,
+        perPage: PER_PAGE,
+      );
+
+      setState(() {
+        _collections = collections;
+        _isLoading = false;
+      });
+    } catch (_) {}
+  }
+
+  Future<void> getMoreCollections() async {
+    try {
+      final int nextPage = (_collections.length / PER_PAGE).round() + 1;
+
+      setState(() {
+        _isLoading = true;
+      });
+
+      final List<Collection> collections =
+          await _collectionsService.listCollections(
+        page: nextPage,
+        perPage: PER_PAGE,
+      );
+
+      setState(() {
+        _collections.addAll(collections);
+        _isLoading = false;
+      });
+    } catch (_) {}
   }
 
   void _goToSearchPage() {
@@ -103,6 +147,15 @@ class _HomeRouteState extends State<HomeRoute> {
       },
     );
   }
+
+  Widget _renderPhotoItem({Photo item, double width}) =>
+      PhotoItem(photo: item, width: width);
+
+  Widget _renderCollectionItem({Collection item, double width}) =>
+      CollectionItem(
+        collection: item,
+        width: width,
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -157,14 +210,32 @@ class _HomeRouteState extends State<HomeRoute> {
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         body: TabBarView(
           children: [
-            Expanded(
-              child: PhotoList(
-                photos: _photos,
-                loadMore: _handleLoadMore,
-                isLoading: _isLoading,
-              ),
+            Column(
+              children: [
+                // Expanded needs to be the direct child of Column, Row or Flex
+                Expanded(
+                  child: ItemList<Photo>(
+                    items: _photos,
+                    loadMore: _getMorePhotos,
+                    isLoading: _isLoading,
+                    renderItem: _renderPhotoItem,
+                  ),
+                ),
+              ],
             ),
-            Container(),
+            Column(
+              children: [
+                // Expanded needs to be the direct child of Column, Row or Flex
+                Expanded(
+                  child: ItemList<Collection>(
+                    isLoading: _isLoading,
+                    loadMore: getMoreCollections,
+                    items: _collections,
+                    renderItem: _renderCollectionItem,
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),

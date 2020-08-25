@@ -6,7 +6,7 @@ class PhotoItem extends StatelessWidget {
   final double width;
   final double _profileImageSize = 35;
 
-  PhotoItem({this.photo, this.width});
+  PhotoItem({@required this.photo, @required this.width});
 
   double get _ratio {
     return this.photo.width / this.photo.height;

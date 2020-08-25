@@ -29,7 +29,7 @@ class CollectionsService {
     if (response.statusCode == 200) {
       return compute(_parseCollection, response.body);
     } else {
-      throw Exception('Failed to load photos');
+      throw Exception('Failed to load collections');
     }
   }
 }
