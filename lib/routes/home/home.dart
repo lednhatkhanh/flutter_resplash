@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:re_splash/models/collection.model.dart';
-import 'package:re_splash/routes/home/oder_by_modal_content.dart';
+import 'package:re_splash/routes/home/collections_type_modal.dart';
+import 'package:re_splash/routes/home/photos_order_by_modal.dart';
 import 'package:re_splash/services/collections.service.dart';
 import 'package:re_splash/widgets/collection_item.dart';
 import 'package:re_splash/widgets/photo_item.dart';
@@ -18,24 +19,40 @@ class HomeRoute extends StatefulWidget {
 
 const int PER_PAGE = 15;
 
-class _HomeRouteState extends State<HomeRoute> {
+class _HomeRouteState extends State<HomeRoute>
+    with SingleTickerProviderStateMixin {
   final PhotosService _photoService = PhotosService();
   final CollectionsService _collectionsService = CollectionsService();
+  TabController _tabController;
+  final List<String> _tabs = ['Photos', 'Collections'];
+
+  bool _isLoading;
 
   List<Collection> _collections;
+  CollectionsType _collectionsType;
+
   List<Photo> _photos;
-  bool _isLoading;
-  GetPhotosOrderBy _orderBy;
+  PhotosOrderBy _photosOrderBy;
 
   @override
   void initState() {
     super.initState();
+    _collections = [];
     _photos = [];
     _isLoading = false;
-    _orderBy = GetPhotosOrderBy.latest;
+    _photosOrderBy = PhotosOrderBy.latest;
+    _collectionsType = CollectionsType.all;
+    _tabController =
+        TabController(length: _tabs.length, initialIndex: 0, vsync: this);
 
     _getPhotos();
     _getCollections();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _tabController.dispose();
   }
 
   Future<void> _getPhotos() async {
@@ -45,10 +62,10 @@ class _HomeRouteState extends State<HomeRoute> {
         _photos = [];
       });
 
-      final List<Photo> photos = await _photoService.getPhotos(
+      final List<Photo> photos = await _photoService.listPhotos(
         page: 1,
         perPage: PER_PAGE,
-        orderBy: _orderBy,
+        orderBy: _photosOrderBy,
       );
 
       setState(() {
@@ -66,10 +83,10 @@ class _HomeRouteState extends State<HomeRoute> {
         _isLoading = true;
       });
 
-      final List<Photo> photos = await _photoService.getPhotos(
+      final List<Photo> photos = await _photoService.listPhotos(
         page: nextPage,
         perPage: PER_PAGE,
-        orderBy: _orderBy,
+        orderBy: _photosOrderBy,
       );
 
       setState(() {
@@ -86,11 +103,18 @@ class _HomeRouteState extends State<HomeRoute> {
         _collections = [];
       });
 
-      final List<Collection> collections =
-          await _collectionsService.listCollections(
-        page: 1,
-        perPage: PER_PAGE,
-      );
+      List<Collection> collections = [];
+      if (_collectionsType == CollectionsType.all) {
+        collections = await _collectionsService.listCollections(
+          page: 1,
+          perPage: PER_PAGE,
+        );
+      } else {
+        collections = await _collectionsService.listFeaturedCollections(
+          page: 1,
+          perPage: PER_PAGE,
+        );
+      }
 
       setState(() {
         _collections = collections;
@@ -107,11 +131,18 @@ class _HomeRouteState extends State<HomeRoute> {
         _isLoading = true;
       });
 
-      final List<Collection> collections =
-          await _collectionsService.listCollections(
-        page: nextPage,
-        perPage: PER_PAGE,
-      );
+      List<Collection> collections = [];
+      if (_collectionsType == CollectionsType.all) {
+        collections = await _collectionsService.listCollections(
+          page: nextPage,
+          perPage: PER_PAGE,
+        );
+      } else {
+        collections = await _collectionsService.listFeaturedCollections(
+          page: nextPage,
+          perPage: PER_PAGE,
+        );
+      }
 
       setState(() {
         _collections.addAll(collections);
@@ -127,25 +158,42 @@ class _HomeRouteState extends State<HomeRoute> {
     );
   }
 
-  void _handleOrderByChanged(GetPhotosOrderBy value) {
+  void _handleOrderByChanged(PhotosOrderBy orderBy) {
     setState(() {
-      _orderBy = value;
+      _photosOrderBy = orderBy;
     });
 
     _getPhotos();
     Navigator.pop(context);
   }
 
+  void _handleCollectionsTypeChanged(CollectionsType type) {
+    setState(() {
+      _collectionsType = type;
+    });
+
+    _getCollections();
+    Navigator.pop(context);
+  }
+
   void _handleShowShortBottomSheet() {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return OrderByModalContent(
+    if (_tabs[_tabController.index] == 'Photos') {
+      showModalBottomSheet(
+        context: context,
+        builder: (context) => PhotosOrderByModal(
           onChanged: _handleOrderByChanged,
-          orderBy: _orderBy,
-        );
-      },
-    );
+          orderBy: _photosOrderBy,
+        ),
+      );
+    } else {
+      showModalBottomSheet(
+        context: context,
+        builder: (context) => CollectionTypeModal(
+          onChanged: _handleCollectionsTypeChanged,
+          type: _collectionsType,
+        ),
+      );
+    }
   }
 
   Widget _renderPhotoItem({Photo item, double width}) =>
@@ -159,85 +207,80 @@ class _HomeRouteState extends State<HomeRoute> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        extendBody: true,
+    return Scaffold(
+      extendBody: true,
+      backgroundColor: Colors.white,
+      appBar: AppBar(
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          flexibleSpace: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              TabBar(
-                tabs: [
-                  Tab(
-                    child: Text(
-                      'Photos',
-                      style: Theme.of(context).textTheme.bodyText1,
-                    ),
-                  ),
-                  Tab(
-                    child: Text(
-                      'Collections',
-                      style: Theme.of(context).textTheme.bodyText1,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        bottomNavigationBar: BottomAppBar(
-          shape: CircularNotchedRectangle(),
-          notchMargin: 3.0,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Spacer(flex: 1),
-              IconButton(
-                icon: const Icon(Icons.sort),
-                tooltip: 'Sort',
-                onPressed: _handleShowShortBottomSheet,
-              ),
-            ],
-          ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.search),
-          onPressed: _goToSearchPage,
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        body: TabBarView(
+        flexibleSpace: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Column(
-              children: [
-                // Expanded needs to be the direct child of Column, Row or Flex
-                Expanded(
-                  child: ItemList<Photo>(
-                    items: _photos,
-                    loadMore: _getMorePhotos,
-                    isLoading: _isLoading,
-                    renderItem: _renderPhotoItem,
-                  ),
-                ),
-              ],
-            ),
-            Column(
-              children: [
-                // Expanded needs to be the direct child of Column, Row or Flex
-                Expanded(
-                  child: ItemList<Collection>(
-                    isLoading: _isLoading,
-                    loadMore: getMoreCollections,
-                    items: _collections,
-                    renderItem: _renderCollectionItem,
-                  ),
-                ),
-              ],
+            TabBar(
+              controller: _tabController,
+              tabs: _tabs
+                  .map(
+                    (tabText) => Tab(
+                      child: Text(
+                        tabText,
+                        style: Theme.of(context).textTheme.bodyText1,
+                      ),
+                    ),
+                  )
+                  .toList(),
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        shape: CircularNotchedRectangle(),
+        notchMargin: 3.0,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Spacer(flex: 1),
+            IconButton(
+              icon: const Icon(Icons.sort),
+              tooltip: 'Order by',
+              onPressed: _handleShowShortBottomSheet,
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.search),
+        onPressed: _goToSearchPage,
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          Column(
+            children: [
+              // Expanded needs to be the direct child of Column, Row or Flex
+              Expanded(
+                child: ItemList<Photo>(
+                  items: _photos,
+                  loadMore: _getMorePhotos,
+                  isLoading: _isLoading,
+                  renderItem: _renderPhotoItem,
+                ),
+              ),
+            ],
+          ),
+          Column(
+            children: [
+              // Expanded needs to be the direct child of Column, Row or Flex
+              Expanded(
+                child: ItemList<Collection>(
+                  isLoading: _isLoading,
+                  loadMore: getMoreCollections,
+                  items: _collections,
+                  renderItem: _renderCollectionItem,
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

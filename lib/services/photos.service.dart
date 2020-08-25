@@ -15,7 +15,7 @@ List<Photo> _parseSearchPhotos(dynamic jsonData) {
       .toList();
 }
 
-enum GetPhotosOrderBy {
+enum PhotosOrderBy {
   latest,
   oldest,
   popular,
@@ -24,20 +24,20 @@ enum GetPhotosOrderBy {
 class PhotosService {
   final UnsplashClient _client = new UnsplashClient();
 
-  Future<List<Photo>> getPhotos({
-    int page,
-    int perPage,
-    GetPhotosOrderBy orderBy,
+  Future<List<Photo>> listPhotos({
+    @required int page,
+    @required int perPage,
+    @required PhotosOrderBy orderBy,
   }) async {
     String orderByString;
     switch (orderBy) {
-      case GetPhotosOrderBy.oldest:
+      case PhotosOrderBy.oldest:
         orderByString = 'oldest';
         break;
-      case GetPhotosOrderBy.popular:
+      case PhotosOrderBy.popular:
         orderByString = 'popular';
         break;
-      case GetPhotosOrderBy.latest:
+      case PhotosOrderBy.latest:
       default:
         orderByString = 'latest';
     }
@@ -60,9 +60,9 @@ class PhotosService {
   }
 
   Future<List<Photo>> searchPhotos({
-    String query,
-    int page,
-    int perPage,
+    @required String query,
+    @required int page,
+    @required int perPage,
   }) async {
     final String url = _client.buildUrl(
       '/search/photos',

@@ -9,6 +9,11 @@ List<Collection> _parseCollection(dynamic jsonData) {
       .toList();
 }
 
+enum CollectionsType {
+  all,
+  featured,
+}
+
 class CollectionsService {
   final UnsplashClient _client = new UnsplashClient();
 
@@ -18,6 +23,27 @@ class CollectionsService {
   }) async {
     final String url = _client.buildUrl(
       '/collections',
+      {
+        "page": page.toString(),
+        "per_page": perPage.toString(),
+      },
+    );
+
+    final response = await _client.get(url);
+
+    if (response.statusCode == 200) {
+      return compute(_parseCollection, response.body);
+    } else {
+      throw Exception('Failed to load collections');
+    }
+  }
+
+  Future<List<Collection>> listFeaturedCollections({
+    @required int page,
+    @required int perPage,
+  }) async {
+    final String url = _client.buildUrl(
+      '/collections/featured',
       {
         "page": page.toString(),
         "per_page": perPage.toString(),
