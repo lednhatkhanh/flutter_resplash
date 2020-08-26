@@ -35,12 +35,12 @@ class _SearchRouteState extends State<SearchRoute> {
         _photos = [];
       });
 
-      final List<Photo> photos = await _photoService.searchPhotos(
+      final photos = await _photoService.searchPhotos(
         query: _searchInputController.text,
         page: 1,
         perPage: PER_PAGE,
       );
-      final bool canLoadMore = photos.length == PER_PAGE;
+      final canLoadMore = photos.length == PER_PAGE;
 
       setState(() {
         _photos = photos;
@@ -52,17 +52,17 @@ class _SearchRouteState extends State<SearchRoute> {
 
   Future<void> _loadMorePhotos() async {
     try {
-      final int nextPage = (_photos.length / PER_PAGE).round() + 1;
+      final nextPage = (_photos.length / PER_PAGE).round() + 1;
       setState(() {
         _isLoading = true;
       });
 
-      final List<Photo> photos = await _photoService.searchPhotos(
+      final photos = await _photoService.searchPhotos(
         query: _searchInputController.text,
         page: nextPage,
         perPage: PER_PAGE,
       );
-      final bool canLoadMore = photos.length == PER_PAGE;
+      final canLoadMore = photos.length == PER_PAGE;
 
       setState(() {
         _photos.addAll(photos);
@@ -72,7 +72,7 @@ class _SearchRouteState extends State<SearchRoute> {
     } catch (_) {}
   }
 
-  void _handleSearch(_) async {
+  void _handleSearch(_) {
     _searchPhotos();
   }
 

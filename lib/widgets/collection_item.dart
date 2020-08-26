@@ -37,7 +37,7 @@ class CollectionItem extends StatelessWidget {
   }
 
   String _getProfileImageUrl(double devicePixelRatio) {
-    final Uri parsedProfileImageUrl =
+    final parsedProfileImageUrl =
         Uri.parse(collection.user.profileImage.medium);
 
     return parsedProfileImageUrl.replace(
@@ -54,17 +54,18 @@ class CollectionItem extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => CollectionDetails(
-                collection: this.collection,
-              )),
+        builder: (context) => CollectionDetails(
+          collection: collection,
+        ),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     final devicePixelRatio = MediaQuery.of(context).devicePixelRatio;
-    final String imageUrl = _getImageUrl(devicePixelRatio);
-    final String profileImageUrl = _getProfileImageUrl(devicePixelRatio);
+    final imageUrl = _getImageUrl(devicePixelRatio);
+    final profileImageUrl = _getProfileImageUrl(devicePixelRatio);
 
     return GestureDetector(
       onTap: () => _goToCollectionDetailsScreen(context),
@@ -94,7 +95,7 @@ class CollectionItem extends StatelessWidget {
                 height: 10,
               ),
               ClipRRect(
-                borderRadius: new BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(10),
                 child: ColorFiltered(
                   colorFilter: ColorFilter.mode(
                     Colors.black.withOpacity(0.3),

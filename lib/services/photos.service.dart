@@ -10,7 +10,7 @@ enum PhotosOrderBy {
 }
 
 class PhotosService {
-  final UnsplashClient _client = new UnsplashClient();
+  final UnsplashClient _client = UnsplashClient();
 
   Future<List<Photo>> listPhotos({
     @required int page,
@@ -30,11 +30,11 @@ class PhotosService {
         orderByString = 'latest';
     }
 
-    final String url = _client.buildUrl(
+    final url = _client.buildUrl(
       '/photos',
       {
-        "page": page.toString(),
-        "per_page": perPage.toString(),
+        'page': page.toString(),
+        'per_page': perPage.toString(),
         'order_by': orderByString,
       },
     );
@@ -52,12 +52,12 @@ class PhotosService {
     @required int page,
     @required int perPage,
   }) async {
-    final String url = _client.buildUrl(
+    final url = _client.buildUrl(
       '/search/photos',
       {
-        "page": page.toString(),
-        "per_page": perPage.toString(),
-        "query": query,
+        'page': page.toString(),
+        'per_page': perPage.toString(),
+        'query': query,
       },
     );
 

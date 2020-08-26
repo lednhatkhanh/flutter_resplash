@@ -9,7 +9,7 @@ class PhotoItem extends StatelessWidget {
   PhotoItem({@required this.photo, @required this.width});
 
   double get _ratio {
-    return this.photo.width / this.photo.height;
+    return photo.width / photo.height;
   }
 
   double get _height {
@@ -29,7 +29,7 @@ class PhotoItem extends StatelessWidget {
   }
 
   String _getProfileImageUrl(double devicePixelRatio) {
-    final Uri parsedProfileImageUrl = Uri.parse(photo.user.profileImage.medium);
+    final parsedProfileImageUrl = Uri.parse(photo.user.profileImage.medium);
 
     return parsedProfileImageUrl.replace(
       queryParameters: {
@@ -44,8 +44,8 @@ class PhotoItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final devicePixelRatio = MediaQuery.of(context).devicePixelRatio;
-    final String imageUrl = _getImageUrl(devicePixelRatio);
-    final String profileImageUrl = _getProfileImageUrl(devicePixelRatio);
+    final imageUrl = _getImageUrl(devicePixelRatio);
+    final profileImageUrl = _getProfileImageUrl(devicePixelRatio);
 
     return Column(
       children: [
@@ -71,7 +71,7 @@ class PhotoItem extends StatelessWidget {
           height: 10,
         ),
         ClipRRect(
-          borderRadius: new BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(10),
           child: FadeInImage(
             fit: BoxFit.cover,
             width: width.roundToDouble(),

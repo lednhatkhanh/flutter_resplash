@@ -17,7 +17,7 @@ class HomeRoute extends StatefulWidget {
   _HomeRouteState createState() => _HomeRouteState();
 }
 
-const int PER_PAGE = 15;
+const int perPage = 15;
 
 class _HomeRouteState extends State<HomeRoute>
     with SingleTickerProviderStateMixin {
@@ -62,9 +62,9 @@ class _HomeRouteState extends State<HomeRoute>
         _photos = [];
       });
 
-      final List<Photo> photos = await _photoService.listPhotos(
+      final photos = await _photoService.listPhotos(
         page: 1,
-        perPage: PER_PAGE,
+        perPage: perPage,
         orderBy: _photosOrderBy,
       );
 
@@ -77,15 +77,15 @@ class _HomeRouteState extends State<HomeRoute>
 
   Future<void> _getMorePhotos() async {
     try {
-      final int nextPage = (_photos.length / PER_PAGE).round() + 1;
+      final nextPage = (_photos.length / perPage).round() + 1;
 
       setState(() {
         _isLoading = true;
       });
 
-      final List<Photo> photos = await _photoService.listPhotos(
+      final photos = await _photoService.listPhotos(
         page: nextPage,
-        perPage: PER_PAGE,
+        perPage: perPage,
         orderBy: _photosOrderBy,
       );
 
@@ -103,16 +103,16 @@ class _HomeRouteState extends State<HomeRoute>
         _collections = [];
       });
 
-      List<Collection> collections = [];
+      var collections = <Collection>[];
       if (_collectionsType == CollectionsType.all) {
         collections = await _collectionsService.listCollections(
           page: 1,
-          perPage: PER_PAGE,
+          perPage: perPage,
         );
       } else {
         collections = await _collectionsService.listFeaturedCollections(
           page: 1,
-          perPage: PER_PAGE,
+          perPage: perPage,
         );
       }
 
@@ -125,22 +125,22 @@ class _HomeRouteState extends State<HomeRoute>
 
   Future<void> getMoreCollections() async {
     try {
-      final int nextPage = (_collections.length / PER_PAGE).round() + 1;
+      final nextPage = (_collections.length / perPage).round() + 1;
 
       setState(() {
         _isLoading = true;
       });
 
-      List<Collection> collections = [];
+      var collections = <Collection>[];
       if (_collectionsType == CollectionsType.all) {
         collections = await _collectionsService.listCollections(
           page: nextPage,
-          perPage: PER_PAGE,
+          perPage: perPage,
         );
       } else {
         collections = await _collectionsService.listFeaturedCollections(
           page: nextPage,
-          perPage: PER_PAGE,
+          perPage: perPage,
         );
       }
 

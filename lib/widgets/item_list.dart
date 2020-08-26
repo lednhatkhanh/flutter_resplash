@@ -45,11 +45,11 @@ class _ItemListState<T> extends State<ItemList<T>> {
   }
 
   void _handleTriggerLoadmore() {
-    final bool isEnd =
+    final isEnd =
         _controller.offset >= _controller.position.maxScrollExtent * 0.8;
     if (isEnd &&
         widget.canLoadMore &&
-        widget.items.length > 0 &&
+        widget.items.isNotEmpty &&
         !widget.isLoading) {
       widget.loadMore();
     }
@@ -57,9 +57,9 @@ class _ItemListState<T> extends State<ItemList<T>> {
 
   @override
   Widget build(BuildContext context) {
-    final double horizontalPadding = 15;
+    final horizontalPadding = 15.0;
 
-    return widget.isLoading && widget.items.length == 0
+    return widget.isLoading && widget.items.isEmpty
         ? Container(
             alignment: Alignment.center,
             child: CircularProgressIndicator(),
@@ -77,7 +77,7 @@ class _ItemListState<T> extends State<ItemList<T>> {
                 return widget.header;
               }
 
-              int itemIndex = widget.header != null ? index - 1 : index;
+              final itemIndex = widget.header != null ? index - 1 : index;
               if (itemIndex == widget.items.length) {
                 return widget.isLoading
                     ? Container(

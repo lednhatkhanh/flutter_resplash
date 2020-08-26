@@ -10,17 +10,17 @@ enum CollectionsType {
 }
 
 class CollectionsService {
-  final UnsplashClient _client = new UnsplashClient();
+  final UnsplashClient _client = UnsplashClient();
 
   Future<List<Collection>> listCollections({
     @required int page,
     @required int perPage,
   }) async {
-    final String url = _client.buildUrl(
+    final url = _client.buildUrl(
       '/collections',
       {
-        "page": page.toString(),
-        "per_page": perPage.toString(),
+        'page': page.toString(),
+        'per_page': perPage.toString(),
       },
     );
 
@@ -37,11 +37,11 @@ class CollectionsService {
     @required int page,
     @required int perPage,
   }) async {
-    final String url = _client.buildUrl(
+    final url = _client.buildUrl(
       '/collections/featured',
       {
-        "page": page.toString(),
-        "per_page": perPage.toString(),
+        'page': page.toString(),
+        'per_page': perPage.toString(),
       },
     );
 
@@ -59,11 +59,11 @@ class CollectionsService {
     @required int page,
     @required int perPage,
   }) async {
-    final String url = _client.buildUrl(
+    final url = _client.buildUrl(
       '/collections/$id/photos',
       {
-        "page": page.toString(),
-        "per_page": perPage.toString(),
+        'page': page.toString(),
+        'per_page': perPage.toString(),
       },
     );
 

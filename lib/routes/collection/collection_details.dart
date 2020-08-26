@@ -1,11 +1,11 @@
 import 'package:share/share.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:re_splash/models/collection.model.dart';
 import 'package:re_splash/models/photo.model.dart';
 import 'package:re_splash/services/collections.service.dart';
 import 'package:re_splash/widgets/item_list.dart';
 import 'package:re_splash/widgets/photo_item.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class CollectionDetails extends StatefulWidget {
   final Collection collection;
@@ -44,12 +44,12 @@ class _CollectionDetailsState extends State<CollectionDetails> {
         _photos = [];
       });
 
-      final List<Photo> photos = await _collectionsService.getCollectionPhotos(
+      final photos = await _collectionsService.getCollectionPhotos(
         id: widget.collection.id,
         page: 1,
         perPage: PER_PAGE,
       );
-      final bool canLoadMore = photos.length == PER_PAGE;
+      final canLoadMore = photos.length == PER_PAGE;
 
       setState(() {
         _photos = photos;
@@ -61,17 +61,17 @@ class _CollectionDetailsState extends State<CollectionDetails> {
 
   Future<void> _loadMorePhotos() async {
     try {
-      final int nextPage = (_photos.length / PER_PAGE).round() + 1;
+      final nextPage = (_photos.length / PER_PAGE).round() + 1;
       setState(() {
         _isLoading = true;
       });
 
-      final List<Photo> photos = await _collectionsService.getCollectionPhotos(
+      final photos = await _collectionsService.getCollectionPhotos(
         id: widget.collection.id,
         page: nextPage,
         perPage: PER_PAGE,
       );
-      final bool canLoadMore = photos.length == PER_PAGE;
+      final canLoadMore = photos.length == PER_PAGE;
 
       setState(() {
         _photos.addAll(photos);
