@@ -6,13 +6,15 @@ class ItemList<T> extends StatefulWidget {
   final bool canLoadMore;
   final bool isLoading;
   final Widget Function({double width, T item}) renderItem;
+  final Widget header;
 
   ItemList({
     @required this.items,
     @required this.loadMore,
-    this.canLoadMore = true,
     @required this.isLoading,
     @required this.renderItem,
+    this.canLoadMore = true,
+    this.header,
   });
 
   @override
@@ -28,6 +30,10 @@ class _ItemListState<T> extends State<ItemList<T>> {
     super.initState();
 
     _controller.addListener(_handleTriggerLoadmore);
+  }
+
+  int get _itemCount {
+    return widget.items.length + (widget.header != null ? 2 : 1);
   }
 
   @override
@@ -60,11 +66,19 @@ class _ItemListState<T> extends State<ItemList<T>> {
           )
         : ListView.builder(
             controller: _controller,
-            itemCount: widget.items.length + 1,
+            itemCount: _itemCount,
             padding: EdgeInsets.symmetric(
-                horizontal: 10, vertical: horizontalPadding),
+              horizontal: 10,
+              vertical: horizontalPadding,
+            ),
             itemBuilder: (context, index) {
-              if (index == widget.items.length) {
+              // Render header if available
+              if (index == 0 && widget.header != null) {
+                return widget.header;
+              }
+
+              int itemIndex = widget.header != null ? index - 1 : index;
+              if (itemIndex == widget.items.length) {
                 return widget.isLoading
                     ? Container(
                         alignment: Alignment.center,
@@ -74,9 +88,8 @@ class _ItemListState<T> extends State<ItemList<T>> {
                     : Container(height: 0);
               }
 
-              final item = widget.items[index];
               return widget.renderItem(
-                item: item,
+                item: widget.items[itemIndex],
                 width: MediaQuery.of(context).size.width - horizontalPadding,
               );
             },

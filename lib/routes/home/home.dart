@@ -151,7 +151,7 @@ class _HomeRouteState extends State<HomeRoute>
     } catch (_) {}
   }
 
-  void _goToSearchPage() {
+  void _goToSearchScreen() {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => SearchRoute()),
@@ -248,7 +248,7 @@ class _HomeRouteState extends State<HomeRoute>
       ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.search),
-        onPressed: _goToSearchPage,
+        onPressed: _goToSearchScreen,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: TabBarView(

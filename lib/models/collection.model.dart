@@ -13,6 +13,7 @@ class Collection {
   final String shareKey;
   final Photo coverPhoto;
   final InlineUser user;
+  final _CollectionLinks links;
 
   Collection({
     this.id,
@@ -26,6 +27,7 @@ class Collection {
     this.shareKey,
     this.coverPhoto,
     this.user,
+    this.links,
   });
 
   factory Collection.fromJson(Map<String, dynamic> json) {
@@ -41,6 +43,30 @@ class Collection {
       shareKey: json['share_key'],
       coverPhoto: Photo.fromJson(json['cover_photo']),
       user: InlineUser.fromJson(json['user']),
+      links: _CollectionLinks.fromJson(json['links']),
+    );
+  }
+}
+
+class _CollectionLinks {
+  final String self;
+  final String html;
+  final String photos;
+  final String related;
+
+  _CollectionLinks({
+    this.self,
+    this.html,
+    this.photos,
+    this.related,
+  });
+
+  factory _CollectionLinks.fromJson(Map<String, dynamic> json) {
+    return _CollectionLinks(
+      self: json['self'],
+      html: json['html'],
+      photos: json['photos'],
+      related: json['related'],
     );
   }
 }

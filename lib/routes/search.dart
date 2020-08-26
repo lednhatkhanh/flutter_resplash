@@ -76,10 +76,6 @@ class _SearchRouteState extends State<SearchRoute> {
     _searchPhotos();
   }
 
-  void _handleLoadMore() {
-    _loadMorePhotos();
-  }
-
   Widget _renderPhotoItem({Photo item, double width}) =>
       PhotoItem(photo: item, width: width);
 
@@ -94,7 +90,6 @@ class _SearchRouteState extends State<SearchRoute> {
           brightness: Brightness.light,
           iconTheme: Theme.of(context).iconTheme,
           centerTitle: false,
-          elevation: 0,
           title: TextField(
             autofocus: true,
             controller: _searchInputController,
@@ -133,7 +128,7 @@ class _SearchRouteState extends State<SearchRoute> {
                 Expanded(
                   child: ItemList<Photo>(
                     items: _photos,
-                    loadMore: _handleLoadMore,
+                    loadMore: _loadMorePhotos,
                     canLoadMore: _canLoadMore,
                     isLoading: _isLoading,
                     renderItem: _renderPhotoItem,
