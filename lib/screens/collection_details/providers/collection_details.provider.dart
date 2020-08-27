@@ -8,20 +8,18 @@ import 'package:re_splash/models/photo.model.dart';
 const int PER_PAGE = 15;
 
 class CollectionDetailsProvider extends ChangeNotifier {
-  final Collection collection;
+  final Collection _collection;
   final CollectionsData _collectionsData = CollectionsData();
 
   List<Photo> _photos;
   bool _isLoading;
   bool _canLoadMore;
 
-  CollectionDetailsProvider(this.collection) {
-    _photos = [];
-    _canLoadMore = true;
-    _isLoading = false;
-
-    getPhotos();
-  }
+  CollectionDetailsProvider({@required Collection collection})
+      : _collection = collection,
+        _photos = [],
+        _canLoadMore = true,
+        _isLoading = false;
 
   UnmodifiableListView<Photo> get photos {
     return UnmodifiableListView(_photos);
@@ -42,7 +40,7 @@ class CollectionDetailsProvider extends ChangeNotifier {
       notifyListeners();
 
       final photos = await _collectionsData.getCollectionPhotos(
-        id: collection.id,
+        id: _collection.id,
         page: 1,
         perPage: PER_PAGE,
       );
@@ -63,7 +61,7 @@ class CollectionDetailsProvider extends ChangeNotifier {
       notifyListeners();
 
       final photos = await _collectionsData.getCollectionPhotos(
-        id: collection.id,
+        id: _collection.id,
         page: nextPage,
         perPage: PER_PAGE,
       );

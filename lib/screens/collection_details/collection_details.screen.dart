@@ -7,16 +7,17 @@ import 'providers/collection_details.provider.dart';
 import 'widgets/collection_details_content.dart';
 
 class CollectionDetailsScreen extends StatelessWidget {
-  final Collection collection;
+  final Collection _collection;
 
-  CollectionDetailsScreen({this.collection});
+  CollectionDetailsScreen({@required Collection collection})
+      : _collection = collection;
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => CollectionDetailsProvider(collection),
+      create: (context) => CollectionDetailsProvider(collection: _collection),
       child: CollectionDetailsContent(
-        collection: collection,
+        collection: _collection,
       ),
     );
   }

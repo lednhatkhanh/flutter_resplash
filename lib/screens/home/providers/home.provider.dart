@@ -20,11 +20,10 @@ class HomeProvider extends ChangeNotifier {
 
   bool _isLoading = false;
 
-  HomeProvider() {
-    _isLoading = false;
-    _photosOrderBy = PhotosOrderBy.latest;
-    _collectionsType = CollectionsType.all;
-
+  HomeProvider()
+      : _isLoading = false,
+        _photosOrderBy = PhotosOrderBy.latest,
+        _collectionsType = CollectionsType.all {
     getPhotos();
     getCollections();
   }

@@ -13,12 +13,13 @@ import '../providers/collection_details.provider.dart';
 enum PopupMenuValue { share }
 
 class CollectionDetailsContent extends StatelessWidget {
-  final Collection collection;
+  final Collection _collection;
 
-  CollectionDetailsContent({this.collection});
+  CollectionDetailsContent({@required Collection collection})
+      : _collection = collection;
 
   void _openInBrowser() async {
-    final url = collection.links.html;
+    final url = _collection.links.html;
 
     if (await canLaunch(url)) {
       await launch(url);
@@ -26,7 +27,7 @@ class CollectionDetailsContent extends StatelessWidget {
   }
 
   void _handleShare() {
-    Share.share(collection.links.html);
+    Share.share(_collection.links.html);
   }
 
   void _handlePopupMenuSelected(PopupMenuValue value) {
@@ -48,7 +49,7 @@ class CollectionDetailsContent extends StatelessWidget {
         iconTheme: Theme.of(context).iconTheme,
         centerTitle: false,
         title: Text(
-          collection.title,
+          _collection.title,
           style: Theme.of(context).textTheme.headline6,
         ),
         actions: [
@@ -94,9 +95,9 @@ class CollectionDetailsContent extends StatelessWidget {
                   renderItem: _renderPhotoItem,
                   header: Column(
                     children: [
-                      if (collection.description != null)
+                      if (_collection.description != null)
                         Text(
-                          collection.description,
+                          _collection.description,
                           textAlign: TextAlign.center,
                           style: Theme.of(context).textTheme.bodyText1,
                         ),
@@ -104,7 +105,7 @@ class CollectionDetailsContent extends StatelessWidget {
                         height: 4,
                       ),
                       Text(
-                        '${collection.totalPhotos} photos - Curated by ${collection.user.name}',
+                        '${_collection.totalPhotos} photos - Curated by ${_collection.user.name}',
                         style: Theme.of(context).textTheme.bodyText1,
                       ),
                       SizedBox(

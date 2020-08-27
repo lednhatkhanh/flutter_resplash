@@ -1,79 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:re_splash/screens/search/providers/query.provider.dart';
+import 'package:re_splash/screens/search/providers/search_photos.provider.dart';
 import 'package:re_splash/widgets/photo_item.dart';
 import 'package:re_splash/widgets/item_list.dart';
-import 'package:re_splash/data/photos.data.dart';
 import 'package:re_splash/models/photo.model.dart';
 
-class SearchRoute extends StatefulWidget {
+class SearchContent extends StatefulWidget {
   @override
-  _SearchRouteState createState() => _SearchRouteState();
+  _SearchContentState createState() => _SearchContentState();
 }
 
-const int PER_PAGE = 15;
-
-class _SearchRouteState extends State<SearchRoute> {
-  final PhotosData _photoService = PhotosData();
+class _SearchContentState extends State<SearchContent> {
   final TextEditingController _searchInputController = TextEditingController();
-
-  bool _canLoadMore;
-  List<Photo> _photos;
-  bool _isLoading;
+  QueryProvider _queryProvider;
+  SearchPhotosProvider _searchPhotosProvider;
 
   @override
   void initState() {
     super.initState();
-    _photos = [];
-    _canLoadMore = true;
-    _isLoading = false;
-  }
 
-  Future<void> _searchPhotos() async {
-    try {
-      setState(() {
-        _isLoading = true;
-        _photos = [];
-      });
-
-      final photos = await _photoService.searchPhotos(
-        query: _searchInputController.text,
-        page: 1,
-        perPage: PER_PAGE,
-      );
-      final canLoadMore = photos.length == PER_PAGE;
-
-      setState(() {
-        _photos = photos;
-        _isLoading = false;
-        _canLoadMore = canLoadMore;
-      });
-    } catch (_) {}
-  }
-
-  Future<void> _loadMorePhotos() async {
-    try {
-      final nextPage = (_photos.length / PER_PAGE).round() + 1;
-      setState(() {
-        _isLoading = true;
-      });
-
-      final photos = await _photoService.searchPhotos(
-        query: _searchInputController.text,
-        page: nextPage,
-        perPage: PER_PAGE,
-      );
-      final canLoadMore = photos.length == PER_PAGE;
-
-      setState(() {
-        _photos.addAll(photos);
-        _isLoading = false;
-        _canLoadMore = canLoadMore;
-      });
-    } catch (_) {}
+    _queryProvider = Provider.of<QueryProvider>(context, listen: false);
+    _searchPhotosProvider =
+        Provider.of<SearchPhotosProvider>(context, listen: false);
   }
 
   void _handleSearch(_) {
-    _searchPhotos();
+    _queryProvider.query = _searchInputController.text;
+
+    _searchPhotosProvider.searchPhotos();
   }
 
   Widget _renderPhotoItem({Photo item, double width}) =>
@@ -123,18 +79,22 @@ class _SearchRouteState extends State<SearchRoute> {
         body: TabBarView(children: [
           SafeArea(
             bottom: false,
-            child: Column(
-              children: [
-                Expanded(
-                  child: ItemList<Photo>(
-                    items: _photos,
-                    loadMore: _loadMorePhotos,
-                    canLoadMore: _canLoadMore,
-                    isLoading: _isLoading,
-                    renderItem: _renderPhotoItem,
-                  ),
-                ),
-              ],
+            child: Consumer2<QueryProvider, SearchPhotosProvider>(
+              builder: (context, _, searchPhotosProvider, __) {
+                return Column(
+                  children: [
+                    Expanded(
+                      child: ItemList<Photo>(
+                        items: searchPhotosProvider.photos,
+                        loadMore: searchPhotosProvider.loadMorePhotos,
+                        canLoadMore: searchPhotosProvider.canLoadMore,
+                        isLoading: searchPhotosProvider.isLoading,
+                        renderItem: _renderPhotoItem,
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
           ),
           SafeArea(

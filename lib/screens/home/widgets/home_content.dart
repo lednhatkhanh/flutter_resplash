@@ -7,7 +7,7 @@ import 'package:re_splash/widgets/photo_item.dart';
 import 'package:re_splash/widgets/item_list.dart';
 import 'package:re_splash/models/photo.model.dart';
 import 'package:re_splash/data/photos.data.dart';
-import 'package:re_splash/screens/search.dart';
+import 'package:re_splash/screens/search/search.screen.dart';
 
 import '../providers/home.provider.dart';
 import 'collections_type_modal.dart';
@@ -46,7 +46,7 @@ class _HomeContentState extends State<HomeContent>
   void _goToSearchScreen() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => SearchRoute()),
+      MaterialPageRoute(builder: (context) => SearchScreen()),
     );
   }
 

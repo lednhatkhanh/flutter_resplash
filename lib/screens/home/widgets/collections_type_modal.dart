@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:re_splash/data/collections.data.dart';
 
-class CollectionTypeModal extends StatelessWidget {
-  final void Function(CollectionsType) onChanged;
-  final CollectionsType type;
+typedef OnChanged = void Function(CollectionsType);
 
-  CollectionTypeModal({@required this.onChanged, @required this.type});
+class CollectionTypeModal extends StatelessWidget {
+  final OnChanged _onChanged;
+  final CollectionsType _type;
+
+  CollectionTypeModal({
+    @required OnChanged onChanged,
+    @required CollectionsType type,
+  })  : _onChanged = onChanged,
+        _type = type;
 
   @override
   Widget build(BuildContext context) {
@@ -24,16 +30,16 @@ class CollectionTypeModal extends StatelessWidget {
           ListTile(
             leading: Radio(
               value: CollectionsType.all,
-              groupValue: type,
-              onChanged: onChanged,
+              groupValue: _type,
+              onChanged: _onChanged,
             ),
             title: Text('All'),
           ),
           ListTile(
             leading: Radio(
               value: CollectionsType.featured,
-              groupValue: type,
-              onChanged: onChanged,
+              groupValue: _type,
+              onChanged: _onChanged,
             ),
             title: Text('Featured'),
           ),

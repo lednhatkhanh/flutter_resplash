@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:re_splash/data/photos.data.dart';
 
-class PhotosOrderByModal extends StatelessWidget {
-  final void Function(PhotosOrderBy) onChanged;
-  final PhotosOrderBy orderBy;
+typedef OnChange = void Function(PhotosOrderBy);
 
-  PhotosOrderByModal({@required this.onChanged, @required this.orderBy});
+class PhotosOrderByModal extends StatelessWidget {
+  final OnChange _onChanged;
+  final PhotosOrderBy _orderBy;
+
+  PhotosOrderByModal({
+    @required OnChange onChanged,
+    @required PhotosOrderBy orderBy,
+  })  : _onChanged = onChanged,
+        _orderBy = orderBy;
 
   @override
   Widget build(BuildContext context) {
@@ -24,24 +30,24 @@ class PhotosOrderByModal extends StatelessWidget {
           ListTile(
             leading: Radio(
               value: PhotosOrderBy.latest,
-              groupValue: orderBy,
-              onChanged: onChanged,
+              groupValue: _orderBy,
+              onChanged: _onChanged,
             ),
             title: Text('Latest'),
           ),
           ListTile(
             leading: Radio(
               value: PhotosOrderBy.popular,
-              groupValue: orderBy,
-              onChanged: onChanged,
+              groupValue: _orderBy,
+              onChanged: _onChanged,
             ),
             title: Text('Popular'),
           ),
           ListTile(
             leading: Radio(
               value: PhotosOrderBy.oldest,
-              groupValue: orderBy,
-              onChanged: onChanged,
+              groupValue: _orderBy,
+              onChanged: _onChanged,
             ),
             title: Text('Oldest'),
           ),
