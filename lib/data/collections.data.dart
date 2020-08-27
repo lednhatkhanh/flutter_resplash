@@ -1,15 +1,17 @@
 import 'package:flutter/foundation.dart';
+
 import 'package:re_splash/clients/unsplash.client.dart';
 import 'package:re_splash/models/collection.model.dart';
 import 'package:re_splash/models/photo.model.dart';
-import 'package:re_splash/services/utils/parser.dart';
+
+import 'utils/parser.dart';
 
 enum CollectionsType {
   all,
   featured,
 }
 
-class CollectionsService {
+class CollectionsData {
   final UnsplashClient _client = UnsplashClient();
 
   Future<List<Collection>> listCollections({

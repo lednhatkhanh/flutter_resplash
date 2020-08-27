@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:re_splash/services/photos.service.dart';
+import 'package:re_splash/data/photos.data.dart';
 
 class PhotosOrderByModal extends StatelessWidget {
   final void Function(PhotosOrderBy) onChanged;

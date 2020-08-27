@@ -1,7 +1,9 @@
 import 'package:flutter/foundation.dart';
+
 import 'package:re_splash/clients/unsplash.client.dart';
 import 'package:re_splash/models/photo.model.dart';
-import 'package:re_splash/services/utils/parser.dart';
+
+import 'utils/parser.dart';
 
 enum PhotosOrderBy {
   latest,
@@ -9,7 +11,7 @@ enum PhotosOrderBy {
   popular,
 }
 
-class PhotosService {
+class PhotosData {
   final UnsplashClient _client = UnsplashClient();
 
   Future<List<Photo>> listPhotos({

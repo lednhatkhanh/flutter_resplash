@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:re_splash/routes/home/home.dart';
+
+import 'screens/home/home.screen.dart';
 
 void main() {
   runApp(ReplashApp());
@@ -15,7 +16,7 @@ class ReplashApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
         primarySwatch: Colors.deepPurple,
       ),
-      home: HomeRoute(),
+      home: HomeScreen(),
     );
   }
 }

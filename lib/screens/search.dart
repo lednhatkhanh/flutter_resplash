@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:re_splash/widgets/photo_item.dart';
 import 'package:re_splash/widgets/item_list.dart';
-import 'package:re_splash/services/photos.service.dart';
+import 'package:re_splash/data/photos.data.dart';
 import 'package:re_splash/models/photo.model.dart';
 
 class SearchRoute extends StatefulWidget {
@@ -13,7 +13,7 @@ class SearchRoute extends StatefulWidget {
 const int PER_PAGE = 15;
 
 class _SearchRouteState extends State<SearchRoute> {
-  final PhotosService _photoService = PhotosService();
+  final PhotosData _photoService = PhotosData();
   final TextEditingController _searchInputController = TextEditingController();
 
   bool _canLoadMore;

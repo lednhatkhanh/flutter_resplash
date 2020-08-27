@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:re_splash/services/collections.service.dart';
+import 'package:re_splash/data/collections.data.dart';
 
 class CollectionTypeModal extends StatelessWidget {
   final void Function(CollectionsType) onChanged;

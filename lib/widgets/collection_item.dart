@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:re_splash/models/collection.model.dart';
 import 'package:re_splash/models/photo.model.dart';
-import 'package:re_splash/routes/collection/collection_details.dart';
+import 'package:re_splash/screens/collection/collection_details.dart';
 
 class CollectionItem extends StatelessWidget {
   final Collection collection;

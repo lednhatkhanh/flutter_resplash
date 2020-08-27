@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:re_splash/models/collection.model.dart';
 import 'package:re_splash/models/photo.model.dart';
-import 'package:re_splash/services/collections.service.dart';
+import 'package:re_splash/data/collections.data.dart';
 import 'package:re_splash/widgets/item_list.dart';
 import 'package:re_splash/widgets/photo_item.dart';
 
@@ -21,7 +21,7 @@ const int PER_PAGE = 15;
 enum PopupMenuValue { share }
 
 class _CollectionDetailsState extends State<CollectionDetails> {
-  final CollectionsService _collectionsService = CollectionsService();
+  final CollectionsData _collectionsService = CollectionsData();
   List<Photo> _photos;
   bool _isLoading;
   bool _canLoadMore;
