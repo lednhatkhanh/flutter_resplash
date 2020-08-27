@@ -19,7 +19,9 @@ class CollectionDetailsProvider extends ChangeNotifier {
       : _collection = collection,
         _photos = [],
         _canLoadMore = true,
-        _isLoading = false;
+        _isLoading = false {
+    getPhotos();
+  }
 
   UnmodifiableListView<Photo> get photos {
     return UnmodifiableListView(_photos);

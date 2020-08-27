@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:re_splash/models/collection.model.dart';
 import 'package:re_splash/screens/search/providers/query.provider.dart';
+import 'package:re_splash/screens/search/providers/search_collections.provider.dart';
 import 'package:re_splash/screens/search/providers/search_photos.provider.dart';
+import 'package:re_splash/widgets/collection_item.dart';
 import 'package:re_splash/widgets/photo_item.dart';
 import 'package:re_splash/widgets/item_list.dart';
 import 'package:re_splash/models/photo.model.dart';
@@ -16,6 +19,7 @@ class _SearchContentState extends State<SearchContent> {
   final TextEditingController _searchInputController = TextEditingController();
   QueryProvider _queryProvider;
   SearchPhotosProvider _searchPhotosProvider;
+  SearchCollectionsProvider _searchCollectionsProvider;
 
   @override
   void initState() {
@@ -24,16 +28,25 @@ class _SearchContentState extends State<SearchContent> {
     _queryProvider = Provider.of<QueryProvider>(context, listen: false);
     _searchPhotosProvider =
         Provider.of<SearchPhotosProvider>(context, listen: false);
+    _searchCollectionsProvider =
+        Provider.of<SearchCollectionsProvider>(context, listen: false);
   }
 
   void _handleSearch(_) {
     _queryProvider.query = _searchInputController.text;
 
     _searchPhotosProvider.searchPhotos();
+    _searchCollectionsProvider.searchCollections();
   }
 
   Widget _renderPhotoItem({Photo item, double width}) =>
       PhotoItem(photo: item, width: width);
+
+  Widget _renderCollectionItem({Collection item, double width}) =>
+      CollectionItem(
+        collection: item,
+        width: width,
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -76,34 +89,52 @@ class _SearchContentState extends State<SearchContent> {
             ),
           ]),
         ),
-        body: TabBarView(children: [
-          SafeArea(
-            bottom: false,
-            child: Consumer2<QueryProvider, SearchPhotosProvider>(
-              builder: (context, _, searchPhotosProvider, __) {
-                return Column(
-                  children: [
-                    Expanded(
-                      child: ItemList<Photo>(
-                        items: searchPhotosProvider.photos,
-                        loadMore: searchPhotosProvider.loadMorePhotos,
-                        canLoadMore: searchPhotosProvider.canLoadMore,
-                        isLoading: searchPhotosProvider.isLoading,
-                        renderItem: _renderPhotoItem,
+        body: Consumer3<QueryProvider, SearchPhotosProvider,
+            SearchCollectionsProvider>(
+          builder: (
+            context,
+            _,
+            searchPhotosProvider,
+            searchCollectionProvider,
+            __,
+          ) {
+            return SafeArea(
+              bottom: false,
+              child: TabBarView(
+                children: [
+                  Column(
+                    children: [
+                      Expanded(
+                        child: ItemList<Photo>(
+                          items: searchPhotosProvider.photos,
+                          loadMore: searchPhotosProvider.loadMorePhotos,
+                          canLoadMore: searchPhotosProvider.canLoadMore,
+                          isLoading: searchPhotosProvider.isLoading,
+                          renderItem: _renderPhotoItem,
+                        ),
                       ),
-                    ),
-                  ],
-                );
-              },
-            ),
-          ),
-          SafeArea(
-            child: Text('Collections'),
-          ),
-          SafeArea(
-            child: Text('Users'),
-          ),
-        ]),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Expanded(
+                        child: ItemList<Collection>(
+                          items: searchCollectionProvider.collections,
+                          loadMore:
+                              searchCollectionProvider.loadMoreCollections,
+                          canLoadMore: searchCollectionProvider.canLoadMore,
+                          isLoading: searchCollectionProvider.isLoading,
+                          renderItem: _renderCollectionItem,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Text('Users'),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }

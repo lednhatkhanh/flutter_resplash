@@ -77,4 +77,27 @@ class CollectionsData {
       throw Exception('Failed to load collections');
     }
   }
+
+  Future<List<Collection>> searchCollections({
+    @required String query,
+    @required int page,
+    @required int perPage,
+  }) async {
+    final url = _client.buildUrl(
+      '/search/collections',
+      {
+        'page': page.toString(),
+        'per_page': perPage.toString(),
+        'query': query,
+      },
+    );
+
+    final response = await _client.get(url);
+
+    if (response.statusCode == 200) {
+      return compute(Parser.parseSearchCollections, response.body);
+    } else {
+      throw Exception('Failed to search collections');
+    }
+  }
 }

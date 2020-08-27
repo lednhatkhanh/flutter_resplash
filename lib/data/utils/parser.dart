@@ -21,4 +21,10 @@ class Parser {
         .map((e) => Collection.fromJson(e))
         .toList();
   }
+
+  static List<Collection> parseSearchCollections(dynamic jsonData) {
+    return (json.decode(jsonData)['results'] as List<dynamic>)
+        .map((e) => Collection.fromJson(e))
+        .toList();
+  }
 }
