@@ -1,9 +1,9 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
+
 import 'package:re_splash/models/collection.model.dart';
 import 'package:re_splash/models/photo.model.dart';
-import 'package:re_splash/screens/collection/collection_details.dart';
+import 'package:re_splash/screens/collection_details/collection_details.screen.dart';
 
 class CollectionItem extends StatelessWidget {
   final Collection collection;
@@ -54,7 +54,7 @@ class CollectionItem extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => CollectionDetails(
+        builder: (context) => CollectionDetailsScreen(
           collection: collection,
         ),
       ),

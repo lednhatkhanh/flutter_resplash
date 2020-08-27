@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:re_splash/data/collections.data.dart';
 import 'package:re_splash/data/photos.data.dart';
@@ -31,12 +33,12 @@ class HomeProvider extends ChangeNotifier {
     return _isLoading;
   }
 
-  List<Photo> get photos {
-    return _photos;
+  UnmodifiableListView<Photo> get photos {
+    return UnmodifiableListView(_photos);
   }
 
-  List<Collection> get collections {
-    return _collections;
+  UnmodifiableListView<Collection> get collections {
+    return UnmodifiableListView(_collections);
   }
 
   PhotosOrderBy get photosOrderBy {
