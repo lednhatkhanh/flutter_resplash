@@ -97,43 +97,38 @@ class _SearchContentState extends State<SearchContent> {
             searchPhotosProvider,
             searchCollectionProvider,
             __,
-          ) {
-            return SafeArea(
-              bottom: false,
-              child: TabBarView(
+          ) =>
+              TabBarView(
+            children: [
+              Column(
                 children: [
-                  Column(
-                    children: [
-                      Expanded(
-                        child: ItemList<Photo>(
-                          items: searchPhotosProvider.photos,
-                          loadMore: searchPhotosProvider.loadMorePhotos,
-                          canLoadMore: searchPhotosProvider.canLoadMore,
-                          isLoading: searchPhotosProvider.isLoading,
-                          renderItem: _renderPhotoItem,
-                        ),
-                      ),
-                    ],
+                  Expanded(
+                    child: ItemList<Photo>(
+                      items: searchPhotosProvider.photos,
+                      loadMore: searchPhotosProvider.loadMorePhotos,
+                      canLoadMore: searchPhotosProvider.canLoadMore,
+                      isLoading: searchPhotosProvider.isLoading,
+                      renderItem: _renderPhotoItem,
+                    ),
                   ),
-                  Column(
-                    children: [
-                      Expanded(
-                        child: ItemList<Collection>(
-                          items: searchCollectionProvider.collections,
-                          loadMore:
-                              searchCollectionProvider.loadMoreCollections,
-                          canLoadMore: searchCollectionProvider.canLoadMore,
-                          isLoading: searchCollectionProvider.isLoading,
-                          renderItem: _renderCollectionItem,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Text('Users'),
                 ],
               ),
-            );
-          },
+              Column(
+                children: [
+                  Expanded(
+                    child: ItemList<Collection>(
+                      items: searchCollectionProvider.collections,
+                      loadMore: searchCollectionProvider.loadMoreCollections,
+                      canLoadMore: searchCollectionProvider.canLoadMore,
+                      isLoading: searchCollectionProvider.isLoading,
+                      renderItem: _renderCollectionItem,
+                    ),
+                  ),
+                ],
+              ),
+              Text('Users'),
+            ],
+          ),
         ),
       ),
     );

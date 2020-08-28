@@ -4,16 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:re_splash/models/collection.model.dart';
 import 'package:re_splash/models/photo.model.dart';
 import 'package:re_splash/screens/collection_details/collection_details.screen.dart';
+import 'package:re_splash/widgets/user_avatar_item.dart';
 
 class CollectionItem extends StatelessWidget {
-  final Collection collection;
-  final double width;
-  final double _profileImageSize = 35;
+  final Collection _collection;
+  final double _width;
 
-  CollectionItem({@required this.collection, @required this.width});
+  CollectionItem({@required Collection collection, @required double width})
+      : _collection = collection,
+        _width = width;
 
   Photo get _coverPhoto {
-    return collection.coverPhoto;
+    return _collection.coverPhoto;
   }
 
   double get _coverPhotoRatio {
@@ -21,7 +23,7 @@ class CollectionItem extends StatelessWidget {
   }
 
   double get _coverPhotoHeight {
-    return width / _coverPhotoRatio;
+    return _width / _coverPhotoRatio;
   }
 
   String _getImageUrl(double devicePixelRatio) {
@@ -30,22 +32,8 @@ class CollectionItem extends StatelessWidget {
         'dpr': devicePixelRatio.round().toString(),
         'fm': 'jpg',
         'q': '80',
-        'w': width.round().toString(),
+        'w': _width.round().toString(),
         'h': _coverPhotoHeight.round().toString()
-      },
-    ).toString();
-  }
-
-  String _getProfileImageUrl(double devicePixelRatio) {
-    final parsedProfileImageUrl =
-        Uri.parse(collection.user.profileImage.medium);
-
-    return parsedProfileImageUrl.replace(
-      queryParameters: {
-        ...parsedProfileImageUrl.queryParameters,
-        'dpr': devicePixelRatio.round().toString(),
-        'w': _profileImageSize.round().toString(),
-        'h': _profileImageSize.round().toString()
       },
     ).toString();
   }
@@ -55,7 +43,7 @@ class CollectionItem extends StatelessWidget {
       context,
       MaterialPageRoute(
         builder: (context) => CollectionDetailsScreen(
-          collection: collection,
+          collection: _collection,
         ),
       ),
     );
@@ -65,7 +53,6 @@ class CollectionItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final devicePixelRatio = MediaQuery.of(context).devicePixelRatio;
     final imageUrl = _getImageUrl(devicePixelRatio);
-    final profileImageUrl = _getProfileImageUrl(devicePixelRatio);
 
     return GestureDetector(
       onTap: () => _goToCollectionDetailsScreen(context),
@@ -73,23 +60,9 @@ class CollectionItem extends StatelessWidget {
         children: [
           Column(
             children: [
-              Row(
-                children: [
-                  Container(
-                    width: _profileImageSize,
-                    height: _profileImageSize,
-                    child: CircleAvatar(
-                      backgroundImage: NetworkImage(profileImageUrl),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    collection.user.name,
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ],
+              UserAvatarItem(
+                image: _collection.user.profileImage.medium,
+                name: _collection.user.name,
               ),
               const SizedBox(
                 height: 10,
@@ -103,7 +76,7 @@ class CollectionItem extends StatelessWidget {
                   ),
                   child: FadeInImage(
                     fit: BoxFit.cover,
-                    width: width.roundToDouble(),
+                    width: _width.roundToDouble(),
                     height: _coverPhotoHeight.roundToDouble(),
                     placeholder: AssetImage('assets/images/placeholder.jpg'),
                     image: NetworkImage(imageUrl),
@@ -126,7 +99,7 @@ class CollectionItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    collection.title,
+                    _collection.title,
                     style: Theme.of(context).textTheme.subtitle1.copyWith(
                         color: Colors.white, fontWeight: FontWeight.bold),
                   ),
@@ -134,7 +107,7 @@ class CollectionItem extends StatelessWidget {
                     height: 10,
                   ),
                   Text(
-                    '${collection.totalPhotos} photos',
+                    '${_collection.totalPhotos} photos',
                     style: Theme.of(context)
                         .textTheme
                         .subtitle2

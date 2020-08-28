@@ -1,89 +1,76 @@
 import 'package:flutter/material.dart';
 import 'package:re_splash/models/photo.model.dart';
+import 'package:re_splash/screens/photo_details/photo_details.screen.dart';
+import 'package:re_splash/widgets/user_avatar_item.dart';
 
 class PhotoItem extends StatelessWidget {
-  final Photo photo;
-  final double width;
-  final double _profileImageSize = 35;
+  final Photo _photo;
+  final double _width;
 
-  PhotoItem({@required this.photo, @required this.width});
+  PhotoItem({@required Photo photo, @required double width})
+      : _photo = photo,
+        _width = width;
 
   double get _ratio {
-    return photo.width / photo.height;
+    return _photo.width / _photo.height;
   }
 
   double get _height {
-    return width / _ratio;
+    return _width / _ratio;
   }
 
   String _getImageUrl(double devicePixelRatio) {
-    return Uri.parse(photo.urls.raw).replace(
+    return Uri.parse(_photo.urls.raw).replace(
       queryParameters: {
         'dpr': devicePixelRatio.round().toString(),
         'fm': 'jpg',
         'q': '80',
-        'w': width.round().toString(),
+        'w': _width.round().toString(),
         'h': _height.round().toString()
       },
     ).toString();
   }
 
-  String _getProfileImageUrl(double devicePixelRatio) {
-    final parsedProfileImageUrl = Uri.parse(photo.user.profileImage.medium);
-
-    return parsedProfileImageUrl.replace(
-      queryParameters: {
-        ...parsedProfileImageUrl.queryParameters,
-        'dpr': devicePixelRatio.round().toString(),
-        'w': _profileImageSize.round().toString(),
-        'h': _profileImageSize.round().toString()
-      },
-    ).toString();
+  void _goToPhotoDetailsScreen(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PhotoDetailsScreen(photo: _photo),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final devicePixelRatio = MediaQuery.of(context).devicePixelRatio;
     final imageUrl = _getImageUrl(devicePixelRatio);
-    final profileImageUrl = _getProfileImageUrl(devicePixelRatio);
 
-    return Column(
-      children: [
-        Row(
-          children: [
-            Container(
-              width: _profileImageSize,
-              height: _profileImageSize,
-              child: CircleAvatar(
-                backgroundImage: NetworkImage(profileImageUrl),
-              ),
-            ),
-            const SizedBox(
-              width: 10,
-            ),
-            Text(
-              photo.user.name,
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ],
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: FadeInImage(
-            fit: BoxFit.cover,
-            width: width.roundToDouble(),
-            height: _height.roundToDouble(),
-            placeholder: AssetImage('assets/images/placeholder.jpg'),
-            image: NetworkImage(imageUrl),
+    return GestureDetector(
+      onTap: () => _goToPhotoDetailsScreen(context),
+      child: Column(
+        children: [
+          UserAvatarItem(
+            image: _photo.user.profileImage.medium,
+            name: _photo.user.name,
           ),
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-      ],
+          const SizedBox(
+            height: 10,
+          ),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: FadeInImage(
+              fit: BoxFit.cover,
+              width: _width.roundToDouble(),
+              height: _height.roundToDouble(),
+              placeholder: AssetImage('assets/images/placeholder.jpg'),
+              image: NetworkImage(imageUrl),
+            ),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+        ],
+      ),
     );
   }
 }

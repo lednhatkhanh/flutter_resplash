@@ -10,7 +10,7 @@ import 'package:re_splash/widgets/photo_item.dart';
 
 import '../providers/collection_details.provider.dart';
 
-enum PopupMenuValue { share }
+enum _PopupMenuValue { share }
 
 class CollectionDetailsContent extends StatelessWidget {
   final Collection _collection;
@@ -30,8 +30,8 @@ class CollectionDetailsContent extends StatelessWidget {
     Share.share(_collection.links.html);
   }
 
-  void _handlePopupMenuSelected(PopupMenuValue value) {
-    if (value == PopupMenuValue.share) {
+  void _handlePopupMenuSelected(_PopupMenuValue value) {
+    if (value == _PopupMenuValue.share) {
       _handleShare();
     }
   }
@@ -62,62 +62,51 @@ class CollectionDetailsContent extends StatelessWidget {
             icon: const Icon(Icons.more_vert),
             tooltip: 'Menu',
             onSelected: _handlePopupMenuSelected,
-            itemBuilder: (context) {
-              return [
-                PopupMenuItem(
-                  value: PopupMenuValue.share,
-                  child: Row(
-                    children: const [
-                      Icon(Icons.share),
-                      SizedBox(
-                        width: 30,
-                      ),
-                      Text('Share'),
-                    ],
-                  ),
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: _PopupMenuValue.share,
+                child: Row(
+                  children: const [
+                    Icon(Icons.share),
+                    SizedBox(width: 30),
+                    Text('Share'),
+                  ],
                 ),
-              ];
-            },
+              ),
+            ],
           ),
         ],
       ),
-      body: SafeArea(
-        // bottom: false,
-        child: Column(
-          children: [
-            Expanded(
-              child: Consumer<CollectionDetailsProvider>(
-                builder: (context, value, _) => ItemList<Photo>(
-                  items: value.photos,
-                  loadMore: value.loadMorePhotos,
-                  canLoadMore: value.canLoadMore,
-                  isLoading: value.isLoading,
-                  renderItem: _renderPhotoItem,
-                  header: Column(
-                    children: [
-                      if (_collection.description != null)
-                        Text(
-                          _collection.description,
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.bodyText1,
-                        ),
-                      SizedBox(
-                        height: 4,
-                      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: Consumer<CollectionDetailsProvider>(
+              builder: (context, value, _) => ItemList<Photo>(
+                items: value.photos,
+                loadMore: value.loadMorePhotos,
+                canLoadMore: value.canLoadMore,
+                isLoading: value.isLoading,
+                renderItem: _renderPhotoItem,
+                header: Column(
+                  children: [
+                    if (_collection.description != null)
                       Text(
-                        '${_collection.totalPhotos} photos - Curated by ${_collection.user.name}',
+                        _collection.description,
+                        textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.bodyText1,
                       ),
-                      SizedBox(
-                        height: 6,
-                      ),
-                    ],
-                  ),
+                    SizedBox(height: 4),
+                    Text(
+                      '${_collection.totalPhotos} photos - Curated by ${_collection.user.name}',
+                      style: Theme.of(context).textTheme.bodyText1,
+                    ),
+                    SizedBox(height: 6),
+                  ],
                 ),
               ),
-            )
-          ],
-        ),
+            ),
+          )
+        ],
       ),
     );
   }

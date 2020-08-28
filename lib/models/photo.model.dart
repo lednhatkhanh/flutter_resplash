@@ -11,6 +11,7 @@ class Photo {
   final _Urls urls;
   final _Links links;
   final InlineUser user;
+  final String altDescription;
 
   Photo({
     this.id,
@@ -23,6 +24,7 @@ class Photo {
     this.urls,
     this.links,
     this.user,
+    this.altDescription,
   });
 
   factory Photo.fromJson(Map<String, dynamic> json) {
@@ -34,6 +36,7 @@ class Photo {
       likes: json['likes'],
       description: json['description'],
       likedByUser: json['liked_by_user'],
+      altDescription: json['alt_description'],
       urls: _Urls.fromJson(json['urls']),
       links: _Links.fromJson(json['links']),
       user: InlineUser.fromJson(json['user']),
