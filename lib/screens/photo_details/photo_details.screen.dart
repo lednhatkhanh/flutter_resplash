@@ -1,11 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:re_splash/screens/photo_details/widgets/photo_details_action_button.dart';
+import 'package:re_splash/screens/photo_details/widgets/photo_details_body.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:re_splash/models/photo.model.dart';
-
-import 'widgets/photo_details_header.dart';
 
 enum _PopupMenuValue { description, share }
 
@@ -103,32 +103,9 @@ class _PhotoDetailsScreenState extends State<PhotoDetailsScreen> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Container(
-            width: MediaQuery.of(context).size.width,
-            height: 350,
-            child: ColorFiltered(
-              colorFilter: ColorFilter.mode(
-                Colors.black.withOpacity(0.2),
-                BlendMode.darken,
-              ),
-              child: FadeInImage(
-                image: NetworkImage(photo.urls.regular),
-                placeholder: AssetImage('assets/images/placeholder.jpg'),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          PhotoDetailsHeader(photo: photo),
-        ],
-      ),
+      body: PhotoDetailsBody(photo: photo),
       floatingActionButton: Platform.isAndroid
-          ? FloatingActionButton.extended(
-              icon: Icon(Icons.image),
-              label: Text('SET AS WALLPAPER'),
-              onPressed: () {},
-            )
+          ? PhotoDetailsActionButton(photo: photo)
           : null,
     );
   }
