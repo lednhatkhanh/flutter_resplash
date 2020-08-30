@@ -20,7 +20,7 @@ class MainActivity : FlutterActivity() {
                 val filePath = call.argument<String>("filePath")
 
                 if (filePath == null) {
-                    result.error("MISSING_ARGUMENT", "Missing file path", null)
+                    result.error("ERROR", "Missing file path", null)
                 } else {
                     try {
                         setWallpaper(filePath)
@@ -37,7 +37,7 @@ class MainActivity : FlutterActivity() {
         val wallpaperManager = WallpaperManager.getInstance(this)
 
         if (!wallpaperManager.isWallpaperSupported || !wallpaperManager.isWallpaperSupported) {
-            throw Error("Failed to set wallpaper")
+            throw Error("Device doesn't support changing wallpaper")
         }
 
         try {
@@ -46,7 +46,7 @@ class MainActivity : FlutterActivity() {
             val intent = wallpaperManager.getCropAndSetWallpaperIntent(uri)
             startActivity(intent)
         } catch (error: Exception) {
-            throw Error("Failed to set wallpaper")
+            throw Error("Failed to change wallpaper")
         }
     }
 }

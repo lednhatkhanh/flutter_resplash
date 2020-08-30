@@ -71,4 +71,19 @@ class PhotosData {
       throw Exception('Failed to search photos');
     }
   }
+
+  Future<Photo> getAPhoto({@required String id}) async {
+    final url = _client.buildUrl(
+      '/photos/$id',
+      null,
+    );
+
+    final response = await _client.get(url);
+
+    if (response.statusCode == 200) {
+      return compute(Parser.parsePhoto, response.body);
+    } else {
+      throw Exception('Failed to get photo');
+    }
+  }
 }

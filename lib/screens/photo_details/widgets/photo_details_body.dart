@@ -4,8 +4,13 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:re_splash/models/photo.model.dart';
+import 'package:re_splash/screens/photo_details/providers/photo_details.provider.dart';
 import 'package:re_splash/screens/photo_details/utils/download_utils.dart';
+import 'package:re_splash/screens/photo_details/widgets/photo_details_exif.dart';
+import 'package:re_splash/screens/photo_details/widgets/photo_details_statics.dart';
+import 'package:re_splash/screens/photo_details/widgets/photo_details_tags.dart';
 import 'photo_details_header.dart';
 
 class PhotoDetailsBody extends StatefulWidget {
@@ -17,7 +22,8 @@ class PhotoDetailsBody extends StatefulWidget {
   _PhotoDetailsBodyState createState() => _PhotoDetailsBodyState();
 }
 
-class _PhotoDetailsBodyState extends State<PhotoDetailsBody> {
+class _PhotoDetailsBodyState extends State<PhotoDetailsBody>
+    with SingleTickerProviderStateMixin {
   Future<String> get _downloadDir async {
     Directory downloadPath;
 
@@ -61,7 +67,8 @@ class _PhotoDetailsBodyState extends State<PhotoDetailsBody> {
   }
 
   void _handleDownload() async {
-    final permissionStatus = await DownloadUtils.ensureStoragePermission(context);
+    final permissionStatus =
+        await DownloadUtils.ensureStoragePermission(context);
     if (!permissionStatus) {
       return;
     }
@@ -91,28 +98,52 @@ class _PhotoDetailsBodyState extends State<PhotoDetailsBody> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          width: MediaQuery.of(context).size.width,
-          height: 350,
-          child: ColorFiltered(
-            colorFilter: ColorFilter.mode(
-              Colors.black.withOpacity(0.2),
-              BlendMode.darken,
-            ),
-            child: FadeInImage(
-              image: NetworkImage(widget._photo.urls.regular),
-              placeholder: AssetImage('assets/images/placeholder.jpg'),
-              fit: BoxFit.cover,
+    return Consumer<PhotoDetailsProvider>(
+      builder: (context, value, child) => Column(
+        children: [
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: 320,
+            child: ColorFiltered(
+              colorFilter: ColorFilter.mode(
+                Colors.black.withOpacity(0.2),
+                BlendMode.darken,
+              ),
+              child: FadeInImage(
+                image: NetworkImage(value.photo.urls.regular),
+                placeholder: AssetImage('assets/images/placeholder.jpg'),
+                fit: BoxFit.cover,
+              ),
             ),
           ),
-        ),
-        PhotoDetailsHeader(
-          photo: widget._photo,
-          onDownload: _handleDownload,
-        ),
-      ],
+          PhotoDetailsHeader(
+            photo: value.photo,
+            onDownload: _handleDownload,
+          ),
+          AnimatedSize(
+            vsync: this,
+            duration: Duration(milliseconds: 300),
+            curve: Curves.easeIn,
+            child: value.photo.exif != null
+                ? Container(
+                    child: Column(
+                      children: [
+                        PhotoDetailsExif(photo: value.photo),
+                        PhotoDetailsStatics(photo: value.photo),
+                        PhotoDetailsTags(photo: value.photo),
+                      ],
+                    ),
+                  )
+                : value.isLoading
+                    ? Container(
+                        alignment: Alignment.center,
+                        padding: EdgeInsets.only(top: 10),
+                        child: CircularProgressIndicator(),
+                      )
+                    : Container(),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -16,6 +16,10 @@ class Parser {
         .toList();
   }
 
+  static Photo parsePhoto(dynamic jsonData) {
+    return Photo.fromJson(json.decode(jsonData));
+  }
+
   static List<Collection> parseCollection(dynamic jsonData) {
     return (json.decode(jsonData) as List<dynamic>)
         .map((e) => Collection.fromJson(e))

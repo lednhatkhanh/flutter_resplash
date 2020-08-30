@@ -12,6 +12,10 @@ class Photo {
   final _Links links;
   final InlineUser user;
   final String altDescription;
+  final int views;
+  final int downloads;
+  final _Exif exif;
+  final List<_Tag> tags;
 
   Photo({
     this.id,
@@ -25,6 +29,10 @@ class Photo {
     this.links,
     this.user,
     this.altDescription,
+    this.exif,
+    this.views,
+    this.downloads,
+    this.tags,
   });
 
   factory Photo.fromJson(Map<String, dynamic> json) {
@@ -34,12 +42,20 @@ class Photo {
       height: json['height'],
       color: json['color'],
       likes: json['likes'],
+      views: json['views'],
+      downloads: json['downloads'],
       description: json['description'],
       likedByUser: json['liked_by_user'],
       altDescription: json['alt_description'],
       urls: _Urls.fromJson(json['urls']),
       links: _Links.fromJson(json['links']),
       user: InlineUser.fromJson(json['user']),
+      exif: json['exif'] != null ? _Exif.fromJson(json['exif']) : null,
+      tags: json['tags'] != null
+          ? (json['tags'] as List<dynamic>)
+              .map((e) => _Tag.fromJson(e))
+              .toList()
+          : null,
     );
   }
 }
@@ -90,5 +106,46 @@ class _Links {
       download: json['download'],
       downloadLocation: json['download_location'],
     );
+  }
+}
+
+class _Exif {
+  final String make;
+  final String model;
+  final String exposureTime;
+  final String aperture;
+  final String focalLength;
+  final int iso;
+
+  _Exif({
+    this.make,
+    this.model,
+    this.exposureTime,
+    this.aperture,
+    this.focalLength,
+    this.iso,
+  });
+
+  factory _Exif.fromJson(Map<String, dynamic> json) {
+    return _Exif(
+      make: json['make'],
+      model: json['model'],
+      exposureTime: json['exposure_time'],
+      aperture: json['aperture'],
+      focalLength: json['focal_length'],
+      iso: json['iso'],
+    );
+  }
+}
+
+class _Tag {
+  final String title;
+
+  _Tag({
+    this.title,
+  });
+
+  factory _Tag.fromJson(Map<String, dynamic> json) {
+    return _Tag(title: json['title']);
   }
 }
