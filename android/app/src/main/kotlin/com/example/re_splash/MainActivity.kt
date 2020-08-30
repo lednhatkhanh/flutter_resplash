@@ -46,6 +46,7 @@ class MainActivity : FlutterActivity() {
             val intent = wallpaperManager.getCropAndSetWallpaperIntent(uri)
             startActivity(intent)
         } catch (error: Exception) {
+            Log.d("KOTLIN", error.message);
             throw Error("Failed to change wallpaper")
         }
     }

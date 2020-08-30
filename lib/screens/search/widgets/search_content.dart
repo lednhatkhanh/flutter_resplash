@@ -39,6 +39,10 @@ class _SearchContentState extends State<SearchContent> {
     _searchCollectionsProvider.searchCollections();
   }
 
+  void _handleClearSearch() {
+    _searchInputController.clear();
+  }
+
   Widget _renderPhotoItem({Photo item, double width}) =>
       PhotoItem(photo: item, width: width);
 
@@ -65,6 +69,7 @@ class _SearchContentState extends State<SearchContent> {
             decoration: InputDecoration(
               hintText: 'Search',
               border: InputBorder.none,
+              suffixIcon: IconButton(icon: Icon(Icons.clear, size: 18), onPressed: _handleClearSearch),
             ),
             onSubmitted: _handleSearch,
           ),
