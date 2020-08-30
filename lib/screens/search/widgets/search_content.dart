@@ -20,16 +20,40 @@ class _SearchContentState extends State<SearchContent> {
   QueryProvider _queryProvider;
   SearchPhotosProvider _searchPhotosProvider;
   SearchCollectionsProvider _searchCollectionsProvider;
+  bool _showClearButton;
+  bool _autoFocusSearchInput;
 
   @override
   void initState() {
     super.initState();
 
+    _showClearButton = false;
     _queryProvider = Provider.of<QueryProvider>(context, listen: false);
     _searchPhotosProvider =
         Provider.of<SearchPhotosProvider>(context, listen: false);
     _searchCollectionsProvider =
         Provider.of<SearchCollectionsProvider>(context, listen: false);
+
+    _searchInputController.addListener(_handleToggleClearButton);
+
+    if (_queryProvider.query?.isNotEmpty == true) {
+      _searchInputController.text = _queryProvider.query;
+      _autoFocusSearchInput = false;
+    } else {
+      _autoFocusSearchInput = true;
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _searchInputController.removeListener(_handleToggleClearButton);
+  }
+
+  void _handleToggleClearButton() {
+    setState(() {
+      _showClearButton = _searchInputController.text?.isNotEmpty == true;
+    });
   }
 
   void _handleSearch(_) {
@@ -64,12 +88,16 @@ class _SearchContentState extends State<SearchContent> {
           iconTheme: Theme.of(context).iconTheme,
           centerTitle: false,
           title: TextField(
-            autofocus: true,
+            autofocus: _autoFocusSearchInput,
             controller: _searchInputController,
             decoration: InputDecoration(
               hintText: 'Search',
               border: InputBorder.none,
-              suffixIcon: IconButton(icon: Icon(Icons.clear, size: 18), onPressed: _handleClearSearch),
+              suffixIcon: _showClearButton
+                  ? IconButton(
+                      icon: Icon(Icons.clear, size: 18),
+                      onPressed: _handleClearSearch)
+                  : null,
             ),
             onSubmitted: _handleSearch,
           ),

@@ -20,7 +20,11 @@ class SearchPhotosProvider extends ChangeNotifier {
       : _queryProvider = queryProvider,
         _canLoadMore = true,
         _photos = [],
-        _isLoading = false;
+        _isLoading = false {
+    if (queryProvider.query?.isNotEmpty == true) {
+      searchPhotos();
+    }
+  }
 
   bool get canLoadMore {
     return _canLoadMore;

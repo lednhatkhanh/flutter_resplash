@@ -6,12 +6,16 @@ import 'package:re_splash/screens/search/providers/search_photos.provider.dart';
 import 'package:re_splash/screens/search/widgets/search_content.dart';
 
 class SearchScreen extends StatelessWidget {
+  final String _query;
+
+  SearchScreen({String query}) : _query = query;
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         Provider<QueryProvider>(
-          create: (context) => QueryProvider(),
+          create: (context) => QueryProvider(_query),
         ),
         ChangeNotifierProxyProvider<QueryProvider, SearchPhotosProvider>(
           create: (context) => SearchPhotosProvider(

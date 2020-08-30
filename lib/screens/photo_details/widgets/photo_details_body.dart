@@ -89,10 +89,8 @@ class _PhotoDetailsBodyState extends State<PhotoDetailsBody>
     await FlutterDownloader.enqueue(
       url: widget._photo.links.download,
       savedDir: await _downloadDir,
-      showNotification:
-          true, // show download progress in status bar (for Android)
-      openFileFromNotification:
-          true, // click on notification to open downloaded file (for Android)
+      showNotification: true,
+      openFileFromNotification: true,
     );
   }
 

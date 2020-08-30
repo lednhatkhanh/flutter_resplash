@@ -93,12 +93,12 @@ class CollectionDetailsContent extends StatelessWidget {
                       Text(
                         _collection.description,
                         textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.bodyText1,
+                        style: Theme.of(context).textTheme.bodyText2,
                       ),
-                    SizedBox(height: 4),
+                    SizedBox(height: 6),
                     Text(
                       '${_collection.totalPhotos} photos - Curated by ${_collection.user.name}',
-                      style: Theme.of(context).textTheme.bodyText1,
+                      style: Theme.of(context).textTheme.caption,
                     ),
                     SizedBox(height: 6),
                   ],

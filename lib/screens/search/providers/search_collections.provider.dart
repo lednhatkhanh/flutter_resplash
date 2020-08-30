@@ -20,7 +20,11 @@ class SearchCollectionsProvider extends ChangeNotifier {
       : _queryProvider = queryProvider,
         _canLoadMore = true,
         _collections = [],
-        _isLoading = false;
+        _isLoading = false {
+    if (queryProvider.query?.isNotEmpty == true) {
+      searchCollections();
+    }
+  }
 
   bool get canLoadMore {
     return _canLoadMore;

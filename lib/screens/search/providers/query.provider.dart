@@ -1,8 +1,8 @@
 class QueryProvider {
   String _query;
 
-  QueryProvider() {
-    _query = null;
+  QueryProvider(String query) {
+    _query = query;
   }
 
   String get query {

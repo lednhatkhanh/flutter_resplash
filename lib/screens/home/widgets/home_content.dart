@@ -46,7 +46,7 @@ class _HomeContentState extends State<HomeContent>
   void _goToSearchScreen() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => SearchScreen()),
+      MaterialPageRoute(builder: (context) => SearchScreen(query: null)),
     );
   }
 

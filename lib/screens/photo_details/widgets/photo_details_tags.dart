@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:re_splash/models/photo.model.dart';
+import 'package:re_splash/screens/search/search.screen.dart';
 
 class PhotoDetailsTags extends StatelessWidget {
   final Photo _photo;
 
   PhotoDetailsTags({@required Photo photo}) : _photo = photo;
+
+  void _goToSearchScreen(BuildContext context, String title) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SearchScreen(query: title)),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,9 +22,12 @@ class PhotoDetailsTags extends StatelessWidget {
       child: Row(
         children: _photo.tags
             .map(
-              (e) => Container(
+              (tagItem) => Container(
                 margin: EdgeInsets.only(right: 10),
-                child: Chip(label: Text(e.title)),
+                child: GestureDetector(
+                  onTap: () => _goToSearchScreen(context, tagItem.title),
+                  child: Chip(label: Text(tagItem.title)),
+                ),
               ),
             )
             .toList(),
