@@ -16,6 +16,7 @@ class Photo {
   final int downloads;
   final _Exif exif;
   final List<_Tag> tags;
+  final _Location location;
 
   Photo({
     this.id,
@@ -33,6 +34,7 @@ class Photo {
     this.views,
     this.downloads,
     this.tags,
+    this.location,
   });
 
   factory Photo.fromJson(Map<String, dynamic> json) {
@@ -55,6 +57,9 @@ class Photo {
           ? (json['tags'] as List<dynamic>)
               .map((e) => _Tag.fromJson(e))
               .toList()
+          : null,
+      location: json['location'] != null
+          ? _Location.fromJson(json['location'])
           : null,
     );
   }
@@ -147,5 +152,39 @@ class _Tag {
 
   factory _Tag.fromJson(Map<String, dynamic> json) {
     return _Tag(title: json['title']);
+  }
+}
+
+class _Location {
+  final String title;
+  final String name;
+  final String city;
+  final String country;
+  final _Position position;
+
+  _Location({this.title, this.name, this.city, this.country, this.position});
+
+  factory _Location.fromJson(Map<String, dynamic> json) {
+    return _Location(
+      title: json['title'],
+      name: json['name'],
+      city: json['city'],
+      country: json['country'],
+      position: _Position.fromJson(json['position']),
+    );
+  }
+}
+
+class _Position {
+  final double latitude;
+  final double longitude;
+
+  _Position({this.latitude, this.longitude});
+
+  factory _Position.fromJson(Map<String, dynamic> json) {
+    return _Position(
+      latitude: json['latitude'],
+      longitude: json['longitude'],
+    );
   }
 }

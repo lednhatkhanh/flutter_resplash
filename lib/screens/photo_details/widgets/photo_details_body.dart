@@ -12,6 +12,7 @@ import 'package:re_splash/screens/photo_details/utils/download_utils.dart';
 import 'package:re_splash/screens/photo_details/widgets/photo_details_exif.dart';
 import 'package:re_splash/screens/photo_details/widgets/photo_details_statics.dart';
 import 'package:re_splash/screens/photo_details/widgets/photo_details_tags.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'photo_details_header.dart';
 
 class PhotoDetailsBody extends StatefulWidget {
@@ -25,6 +26,16 @@ class PhotoDetailsBody extends StatefulWidget {
 
 class _PhotoDetailsBodyState extends State<PhotoDetailsBody>
     with SingleTickerProviderStateMixin {
+  PhotoDetailsProvider _photoDetailsProvider;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _photoDetailsProvider =
+        Provider.of<PhotoDetailsProvider>(context, listen: false);
+  }
+
   Future<String> get _downloadDir async {
     Directory downloadPath;
 
@@ -95,24 +106,71 @@ class _PhotoDetailsBodyState extends State<PhotoDetailsBody>
     );
   }
 
+  void _openGoogleMaps() async {
+    final location = _photoDetailsProvider.photo.location;
+    final latitude = location?.position?.latitude;
+    final longitude = location?.position?.longitude;
+    if (latitude == null || longitude == null) {
+      return;
+    }
+
+    final url =
+        'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude';
+    if (await canLaunch(url)) {
+      await launch(url);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<PhotoDetailsProvider>(
       builder: (context, value, child) => Column(
         children: [
-          Container(
-            width: MediaQuery.of(context).size.width,
-            height: 320,
-            child: ColorFiltered(
-              colorFilter: ColorFilter.mode(
-                Colors.black.withOpacity(0.2),
-                BlendMode.darken,
+          Stack(
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: 320,
+                child: ColorFiltered(
+                  colorFilter: ColorFilter.mode(
+                    Colors.black.withOpacity(0.2),
+                    BlendMode.darken,
+                  ),
+                  child: CachedNetworkImage(
+                    imageUrl: value.photo.urls.regular,
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
-              child: CachedNetworkImage(
-                imageUrl: value.photo.urls.regular,
-                fit: BoxFit.cover,
-              ),
-            ),
+              if (value.photo.location?.city != null &&
+                  value.photo.location?.country != null)
+                Positioned(
+                  bottom: 10,
+                  left: 10,
+                  child: GestureDetector(
+                    onTap: _openGoogleMaps,
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.location_on,
+                          color: Colors.white,
+                          size: 18,
+                        ),
+                        SizedBox(
+                          width: 6,
+                        ),
+                        Text(
+                          '${value.photo.location.city}, ${value.photo.location.country}',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText1
+                              .copyWith(color: Colors.white),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+            ],
           ),
           PhotoDetailsHeader(
             photo: value.photo,
@@ -135,7 +193,7 @@ class _PhotoDetailsBodyState extends State<PhotoDetailsBody>
                 : value.isLoading
                     ? Container(
                         alignment: Alignment.center,
-                        padding: EdgeInsets.only(top: 10),
+                        padding: EdgeInsets.only(top: 15),
                         child: CircularProgressIndicator(),
                       )
                     : Container(),
