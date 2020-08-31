@@ -45,7 +45,13 @@ class _PhotoDetailsContentState extends State<PhotoDetailsContent> {
         context: context,
         child: SimpleDialog(
           contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-          children: [Text(description)],
+          children: [
+            Text(
+              description,
+              style:
+                  Theme.of(context).textTheme.bodyText2.copyWith(height: 1.5),
+            )
+          ],
         ),
       );
     } else {
