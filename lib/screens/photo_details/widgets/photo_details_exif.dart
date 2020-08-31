@@ -54,7 +54,9 @@ class PhotoDetailsExif extends StatelessWidget {
               ),
               PhotoDetailsItem(
                 label: 'Shutter Speed',
-                content: '${_photo.exif.exposureTime}s',
+                content: _photo.exif.exposureTime != null
+                    ? '${_photo.exif.exposureTime}s'
+                    : null,
               ),
               SizedBox(
                 height: 10,
