@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import 'package:re_splash/models/collection.model.dart';
@@ -26,18 +27,6 @@ class CollectionItem extends StatelessWidget {
     return _width / _coverPhotoRatio;
   }
 
-  String _getImageUrl(double devicePixelRatio) {
-    return Uri.parse(_coverPhoto.urls.raw).replace(
-      queryParameters: {
-        'dpr': devicePixelRatio.round().toString(),
-        'fm': 'jpg',
-        'q': '80',
-        'w': _width.round().toString(),
-        'h': _coverPhotoHeight.round().toString()
-      },
-    ).toString();
-  }
-
   void _goToCollectionDetailsScreen(BuildContext context) {
     Navigator.push(
       context,
@@ -51,9 +40,6 @@ class CollectionItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final devicePixelRatio = MediaQuery.of(context).devicePixelRatio;
-    final imageUrl = _getImageUrl(devicePixelRatio);
-
     return GestureDetector(
       onTap: () => _goToCollectionDetailsScreen(context),
       child: Stack(
@@ -71,15 +57,14 @@ class CollectionItem extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
                 child: ColorFiltered(
                   colorFilter: ColorFilter.mode(
-                    Colors.black.withOpacity(0.3),
+                    Colors.black.withOpacity(0.2),
                     BlendMode.darken,
                   ),
-                  child: FadeInImage(
+                  child: CachedNetworkImage(
                     fit: BoxFit.cover,
                     width: _width.roundToDouble(),
                     height: _coverPhotoHeight.roundToDouble(),
-                    placeholder: AssetImage('assets/images/placeholder.jpg'),
-                    image: NetworkImage(imageUrl),
+                    imageUrl: _collection.coverPhoto.urls.regular,
                   ),
                 ),
               ),

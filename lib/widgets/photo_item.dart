@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:re_splash/models/photo.model.dart';
 import 'package:re_splash/screens/photo_details/photo_details.screen.dart';
@@ -19,18 +20,6 @@ class PhotoItem extends StatelessWidget {
     return _width / _ratio;
   }
 
-  String _getImageUrl(double devicePixelRatio) {
-    return Uri.parse(_photo.urls.raw).replace(
-      queryParameters: {
-        'dpr': devicePixelRatio.round().toString(),
-        'fm': 'jpg',
-        'q': '80',
-        'w': _width.round().toString(),
-        'h': _height.round().toString()
-      },
-    ).toString();
-  }
-
   void _goToPhotoDetailsScreen(BuildContext context) {
     Navigator.push(
       context,
@@ -42,9 +31,6 @@ class PhotoItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final devicePixelRatio = MediaQuery.of(context).devicePixelRatio;
-    final imageUrl = _getImageUrl(devicePixelRatio);
-
     return GestureDetector(
       onTap: () => _goToPhotoDetailsScreen(context),
       child: Column(
@@ -58,12 +44,11 @@ class PhotoItem extends StatelessWidget {
           ),
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
-            child: FadeInImage(
+            child: CachedNetworkImage(
               fit: BoxFit.cover,
               width: _width.roundToDouble(),
               height: _height.roundToDouble(),
-              placeholder: AssetImage('assets/images/placeholder.jpg'),
-              image: NetworkImage(imageUrl),
+              imageUrl: _photo.urls.regular,
             ),
           ),
           const SizedBox(

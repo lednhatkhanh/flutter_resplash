@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:path_provider/path_provider.dart';
@@ -107,9 +108,8 @@ class _PhotoDetailsBodyState extends State<PhotoDetailsBody>
                 Colors.black.withOpacity(0.2),
                 BlendMode.darken,
               ),
-              child: FadeInImage(
-                image: NetworkImage(value.photo.urls.regular),
-                placeholder: AssetImage('assets/images/placeholder.jpg'),
+              child: CachedNetworkImage(
+                imageUrl: value.photo.urls.regular,
                 fit: BoxFit.cover,
               ),
             ),
@@ -120,8 +120,8 @@ class _PhotoDetailsBodyState extends State<PhotoDetailsBody>
           ),
           AnimatedSize(
             vsync: this,
-            duration: Duration(milliseconds: 300),
-            curve: Curves.easeIn,
+            duration: Duration(milliseconds: 200),
+            curve: Curves.linear,
             child: value.photo.exif != null
                 ? Container(
                     child: Column(
