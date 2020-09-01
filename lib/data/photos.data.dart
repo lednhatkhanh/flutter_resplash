@@ -86,4 +86,12 @@ class PhotosData {
       throw Exception('Failed to get photo');
     }
   }
+
+  Future<void> trackDownload({@required String downloadUrl}) async {
+    try {
+      await _client.get(downloadUrl);
+    } catch (error) {
+      throw Exception('Failed to track photo download');
+    }
+  }
 }

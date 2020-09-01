@@ -10,7 +10,7 @@ class Photo {
   final String description;
   final _Urls urls;
   final _Links links;
-  final InlineUser user;
+  final User user;
   final String altDescription;
   final int views;
   final int downloads;
@@ -51,7 +51,7 @@ class Photo {
       altDescription: json['alt_description'],
       urls: _Urls.fromJson(json['urls']),
       links: _Links.fromJson(json['links']),
-      user: InlineUser.fromJson(json['user']),
+      user: User.fromJson(json['user']),
       exif: json['exif'] != null ? _Exif.fromJson(json['exif']) : null,
       tags: json['tags'] != null
           ? (json['tags'] as List<dynamic>)

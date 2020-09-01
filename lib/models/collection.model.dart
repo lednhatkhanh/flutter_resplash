@@ -12,7 +12,7 @@ class Collection {
   final bool private;
   final String shareKey;
   final Photo coverPhoto;
-  final InlineUser user;
+  final User user;
   final _CollectionLinks links;
 
   Collection({
@@ -42,7 +42,7 @@ class Collection {
       private: json['private'],
       shareKey: json['share_key'],
       coverPhoto: Photo.fromJson(json['cover_photo']),
-      user: InlineUser.fromJson(json['user']),
+      user: User.fromJson(json['user']),
       links: _CollectionLinks.fromJson(json['links']),
     );
   }

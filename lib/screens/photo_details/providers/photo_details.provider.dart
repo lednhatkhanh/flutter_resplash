@@ -39,4 +39,12 @@ class PhotoDetailsProvider extends ChangeNotifier {
       notifyListeners();
     } catch (_) {}
   }
+
+  Future<void> trackPhotoDownload() async {
+    try {
+      await _photosData.trackDownload(
+        downloadUrl: _photo.links.downloadLocation,
+      );
+    } catch (_) {}
+  }
 }

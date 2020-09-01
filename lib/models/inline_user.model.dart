@@ -1,11 +1,11 @@
-class InlineUser {
+class User {
   final String id;
   final String username;
   final String name;
   final _Links links;
   final _ProfileImage profileImage;
 
-  InlineUser({
+  User({
     this.id,
     this.username,
     this.name,
@@ -13,8 +13,8 @@ class InlineUser {
     this.profileImage,
   });
 
-  factory InlineUser.fromJson(Map<String, dynamic> json) {
-    return InlineUser(
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
       id: json['id'],
       username: json['username'],
       name: json['name'],

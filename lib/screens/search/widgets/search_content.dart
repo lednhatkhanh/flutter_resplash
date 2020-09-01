@@ -79,7 +79,7 @@ class _SearchContentState extends State<SearchContent> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 2,
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -114,12 +114,6 @@ class _SearchContentState extends State<SearchContent> {
                 style: Theme.of(context).textTheme.bodyText1,
               ),
             ),
-            Tab(
-              child: Text(
-                'Users',
-                style: Theme.of(context).textTheme.bodyText1,
-              ),
-            ),
           ]),
         ),
         body: Consumer3<QueryProvider, SearchPhotosProvider,
@@ -129,7 +123,7 @@ class _SearchContentState extends State<SearchContent> {
             _,
             searchPhotosProvider,
             searchCollectionProvider,
-            __,
+            ___,
           ) =>
               TabBarView(
             children: [
@@ -159,7 +153,6 @@ class _SearchContentState extends State<SearchContent> {
                   ),
                 ],
               ),
-              Text('Users'),
             ],
           ),
         ),

@@ -98,12 +98,15 @@ class _PhotoDetailsBodyState extends State<PhotoDetailsBody>
     final snackBar = SnackBar(content: Text('Download started'));
     Scaffold.of(context).showSnackBar(snackBar);
 
-    await FlutterDownloader.enqueue(
-      url: widget._photo.links.download,
-      savedDir: await _downloadDir,
-      showNotification: true,
-      openFileFromNotification: true,
-    );
+    await Future.wait([
+      FlutterDownloader.enqueue(
+        url: widget._photo.links.download,
+        savedDir: await _downloadDir,
+        showNotification: true,
+        openFileFromNotification: true,
+      ),
+      _photoDetailsProvider.trackPhotoDownload(),
+    ]);
   }
 
   void _openGoogleMaps() async {
