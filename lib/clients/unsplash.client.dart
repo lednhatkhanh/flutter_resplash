@@ -1,12 +1,15 @@
 import 'package:http/http.dart' as http;
+import 'package:re_splash/configs/env.dart';
 
 class UnsplashClient extends http.BaseClient {
   final http.Client _client = http.Client();
+  final EnvLoader _envLoader = EnvLoader();
 
   @override
-  Future<http.StreamedResponse> send(http.BaseRequest request) {
+  Future<http.StreamedResponse> send(http.BaseRequest request) async {
     request.headers.addAll({
-      'Authorization': 'Client-ID TG0haQaShuppk7ujA7pOxZqe5jaoalCJ1ELrAGx82f4',
+      'Authorization':
+          'Client-ID ${(await _envLoader.load()).unsplashAccessKey}',
     });
     return _client.send(request);
   }
