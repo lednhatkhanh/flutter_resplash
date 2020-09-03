@@ -5,6 +5,7 @@ import 'package:re_splash/models/collection.model.dart';
 import 'package:re_splash/screens/search/providers/query.provider.dart';
 import 'package:re_splash/screens/search/providers/search_collections.provider.dart';
 import 'package:re_splash/screens/search/providers/search_photos.provider.dart';
+import 'package:re_splash/screens/search/widgets/search_photos_filter_button.dart';
 import 'package:re_splash/widgets/collection_item.dart';
 import 'package:re_splash/widgets/photo_item.dart';
 import 'package:re_splash/widgets/item_list.dart';
@@ -15,13 +16,18 @@ class SearchContent extends StatefulWidget {
   _SearchContentState createState() => _SearchContentState();
 }
 
-class _SearchContentState extends State<SearchContent> {
+const _tabs = ['Photos', 'Collections'];
+
+class _SearchContentState extends State<SearchContent>
+    with SingleTickerProviderStateMixin {
   final TextEditingController _searchInputController = TextEditingController();
   QueryProvider _queryProvider;
   SearchPhotosProvider _searchPhotosProvider;
   SearchCollectionsProvider _searchCollectionsProvider;
   bool _showClearButton;
   bool _autoFocusSearchInput;
+  TabController _tabController;
+  String _currentTab;
 
   @override
   void initState() {
@@ -35,19 +41,32 @@ class _SearchContentState extends State<SearchContent> {
         Provider.of<SearchCollectionsProvider>(context, listen: false);
 
     _searchInputController.addListener(_handleToggleClearButton);
-
     if (_queryProvider.query?.isNotEmpty == true) {
       _searchInputController.text = _queryProvider.query;
       _autoFocusSearchInput = false;
     } else {
       _autoFocusSearchInput = true;
     }
+
+    _tabController = TabController(length: 2, vsync: this);
+    _currentTab = _tabs[0];
+    _tabController.addListener(_handleTabChange);
   }
 
   @override
   void dispose() {
     super.dispose();
     _searchInputController.removeListener(_handleToggleClearButton);
+    _searchInputController.dispose();
+
+    _tabController.removeListener(_handleTabChange);
+    _tabController.dispose();
+  }
+
+  void _handleTabChange() {
+    setState(() {
+      _currentTab = _tabs[_tabController.index];
+    });
   }
 
   void _handleToggleClearButton() {
@@ -78,9 +97,32 @@ class _SearchContentState extends State<SearchContent> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
+    final emptyListWidget = Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Image.asset(
+          'assets/images/undraw_location_search.png',
+          width: 200,
+        ),
+        Text(
+          'Nothing to see here...',
+          style: Theme.of(context).textTheme.bodyText1.copyWith(height: 1.5),
+        ),
+        Text(
+          'Try to search for something',
+          style: Theme.of(context).textTheme.bodyText2.copyWith(height: 1.5),
+        ),
+      ],
+    );
+
+    return Consumer2<SearchPhotosProvider, SearchCollectionsProvider>(
+      builder: (
+        context,
+        searchPhotosProvider,
+        searchCollectionProvider,
+        _,
+      ) =>
+          Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.white,
@@ -101,61 +143,58 @@ class _SearchContentState extends State<SearchContent> {
             ),
             onSubmitted: _handleSearch,
           ),
-          bottom: TabBar(tabs: [
-            Tab(
-              child: Text(
-                'Photos',
-                style: Theme.of(context).textTheme.bodyText1,
-              ),
-            ),
-            Tab(
-              child: Text(
-                'Collections',
-                style: Theme.of(context).textTheme.bodyText1,
-              ),
-            ),
-          ]),
-        ),
-        body: Consumer3<QueryProvider, SearchPhotosProvider,
-            SearchCollectionsProvider>(
-          builder: (
-            context,
-            _,
-            searchPhotosProvider,
-            searchCollectionProvider,
-            ___,
-          ) =>
-              TabBarView(
-            children: [
-              Column(
-                children: [
-                  Expanded(
-                    child: ItemList<Photo>(
-                      items: searchPhotosProvider.photos,
-                      loadMore: searchPhotosProvider.loadMorePhotos,
-                      canLoadMore: searchPhotosProvider.canLoadMore,
-                      isLoading: searchPhotosProvider.isLoading,
-                      renderItem: _renderPhotoItem,
+          bottom: TabBar(
+            controller: _tabController,
+            tabs: _tabs
+                .map(
+                  (e) => Tab(
+                    child: Text(
+                      e,
+                      style: Theme.of(context).textTheme.bodyText1,
                     ),
                   ),
-                ],
-              ),
-              Column(
-                children: [
-                  Expanded(
-                    child: ItemList<Collection>(
-                      items: searchCollectionProvider.collections,
-                      loadMore: searchCollectionProvider.loadMoreCollections,
-                      canLoadMore: searchCollectionProvider.canLoadMore,
-                      isLoading: searchCollectionProvider.isLoading,
-                      renderItem: _renderCollectionItem,
-                    ),
-                  ),
-                ],
-              ),
-            ],
+                )
+                .toList(),
           ),
         ),
+        body: TabBarView(
+          controller: _tabController,
+          children: [
+            Column(
+              children: [
+                Expanded(
+                  child: ItemList<Photo>(
+                    items: searchPhotosProvider.photos,
+                    loadMore: searchPhotosProvider.loadMorePhotos,
+                    canLoadMore: searchPhotosProvider.canLoadMore,
+                    isLoading: searchPhotosProvider.isLoading,
+                    renderItem: _renderPhotoItem,
+                    empty: emptyListWidget,
+                  ),
+                ),
+              ],
+            ),
+            Column(
+              children: [
+                Expanded(
+                  child: ItemList<Collection>(
+                    items: searchCollectionProvider.collections,
+                    loadMore: searchCollectionProvider.loadMoreCollections,
+                    canLoadMore: searchCollectionProvider.canLoadMore,
+                    isLoading: searchCollectionProvider.isLoading,
+                    renderItem: _renderCollectionItem,
+                    empty: emptyListWidget,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+        floatingActionButton:
+            _currentTab == 'Photos' && searchPhotosProvider.photos.isNotEmpty
+                ? SearchPhotosFilterButton()
+                : null,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),
     );
   }

@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:re_splash/clients/unsplash.client.dart';
 import 'package:re_splash/models/photo.model.dart';
 
+import 'utils/enum_to_string.dart';
 import 'utils/parser.dart';
 
 enum PhotosOrderBy {
@@ -10,6 +11,24 @@ enum PhotosOrderBy {
   oldest,
   popular,
 }
+
+enum SearchPhotosOrderBy { relevant, latest }
+enum SearchPhotosContentFilter { low, high }
+enum SearchPhotosColor {
+  any,
+  black_and_white,
+  black,
+  white,
+  yellow,
+  orange,
+  red,
+  purple,
+  magenta,
+  green,
+  teal,
+  blue,
+}
+enum SearchPhotosOrientation { any, landscape, portrait, squarish }
 
 class PhotosData {
   final UnsplashClient _client = UnsplashClient();
@@ -53,6 +72,10 @@ class PhotosData {
     @required String query,
     @required int page,
     @required int perPage,
+    SearchPhotosOrderBy orderBy,
+    SearchPhotosContentFilter contentFilter,
+    SearchPhotosColor color,
+    SearchPhotosOrientation orientation,
   }) async {
     final url = _client.buildUrl(
       '/search/photos',
@@ -60,6 +83,14 @@ class PhotosData {
         'page': page.toString(),
         'per_page': perPage.toString(),
         'query': query,
+        'color': enumToString(
+          color,
+          (value) => value == 'any' ? null : value,
+        ),
+        'orientation':
+            enumToString(orientation, (value) => value == 'any' ? null : value),
+        'content_filter': enumToString(contentFilter, null),
+        'order_by': enumToString(orderBy, null),
       },
     );
 

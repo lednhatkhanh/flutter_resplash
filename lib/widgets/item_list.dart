@@ -7,6 +7,7 @@ class ItemList<T> extends StatefulWidget {
   final bool isLoading;
   final Widget Function({double width, T item}) renderItem;
   final Widget header;
+  final Widget empty;
 
   ItemList({
     @required this.items,
@@ -15,6 +16,7 @@ class ItemList<T> extends StatefulWidget {
     @required this.renderItem,
     this.canLoadMore = true,
     this.header,
+    this.empty,
   });
 
   @override
@@ -59,40 +61,46 @@ class _ItemListState<T> extends State<ItemList<T>> {
   Widget build(BuildContext context) {
     final horizontalPadding = 15.0;
 
-    return widget.isLoading && widget.items.isEmpty
-        ? Container(
-            alignment: Alignment.center,
-            child: CircularProgressIndicator(),
-          )
-        : ListView.builder(
-            controller: _controller,
-            itemCount: _itemCount,
-            padding: EdgeInsets.symmetric(
-              horizontal: 10,
-              vertical: horizontalPadding,
-            ),
-            itemBuilder: (context, index) {
-              // Render header if available
-              if (index == 0 && widget.header != null) {
-                return widget.header;
-              }
+    if (widget.isLoading) {
+      return Container(
+        alignment: Alignment.center,
+        child: CircularProgressIndicator(),
+      );
+    }
 
-              final itemIndex = widget.header != null ? index - 1 : index;
-              if (itemIndex == widget.items.length) {
-                return widget.isLoading
-                    ? Container(
-                        alignment: Alignment.center,
-                        padding: EdgeInsets.symmetric(vertical: 5),
-                        child: CircularProgressIndicator(),
-                      )
-                    : Container(height: 0);
-              }
+    if (widget.items.isEmpty && widget.empty != null) {
+      return widget.empty;
+    }
 
-              return widget.renderItem(
-                item: widget.items[itemIndex],
-                width: MediaQuery.of(context).size.width - horizontalPadding,
-              );
-            },
-          );
+    return ListView.builder(
+      controller: _controller,
+      itemCount: _itemCount,
+      padding: EdgeInsets.symmetric(
+        horizontal: 10,
+        vertical: horizontalPadding,
+      ),
+      itemBuilder: (context, index) {
+        // Render header if available
+        if (index == 0 && widget.header != null) {
+          return widget.header;
+        }
+
+        final itemIndex = widget.header != null ? index - 1 : index;
+        if (itemIndex == widget.items.length) {
+          return widget.isLoading
+              ? Container(
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.symmetric(vertical: 5),
+                  child: CircularProgressIndicator(),
+                )
+              : Container(height: 0);
+        }
+
+        return widget.renderItem(
+          item: widget.items[itemIndex],
+          width: MediaQuery.of(context).size.width - horizontalPadding,
+        );
+      },
+    );
   }
 }

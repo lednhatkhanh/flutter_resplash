@@ -15,12 +15,20 @@ class SearchPhotosProvider extends ChangeNotifier {
   bool _canLoadMore;
   List<Photo> _photos;
   bool _isLoading;
+  SearchPhotosOrderBy _orderBy;
+  SearchPhotosContentFilter _contentFilter;
+  SearchPhotosColor _color;
+  SearchPhotosOrientation _orientation;
 
   SearchPhotosProvider({@required QueryProvider queryProvider})
       : _queryProvider = queryProvider,
         _canLoadMore = true,
         _photos = [],
-        _isLoading = false {
+        _isLoading = false,
+        _orderBy = SearchPhotosOrderBy.relevant,
+        _contentFilter = SearchPhotosContentFilter.low,
+        _color = SearchPhotosColor.any,
+        _orientation = SearchPhotosOrientation.any {
     if (queryProvider.query?.isNotEmpty == true) {
       searchPhotos();
     }
@@ -38,6 +46,36 @@ class SearchPhotosProvider extends ChangeNotifier {
     return UnmodifiableListView(_photos);
   }
 
+  SearchPhotosOrderBy get orderBy {
+    return _orderBy;
+  }
+
+  SearchPhotosContentFilter get contentFilter {
+    return _contentFilter;
+  }
+
+  SearchPhotosColor get color {
+    return _color;
+  }
+
+  SearchPhotosOrientation get orientation {
+    return _orientation;
+  }
+
+  void applyFilter({
+    SearchPhotosOrderBy orderBy,
+    SearchPhotosContentFilter contentFilter,
+    SearchPhotosColor color,
+    SearchPhotosOrientation orientation,
+  }) {
+    _orderBy = orderBy;
+    _contentFilter = contentFilter;
+    _color = color;
+    _orientation = orientation;
+
+    searchPhotos();
+  }
+
   Future<void> searchPhotos() async {
     try {
       _isLoading = true;
@@ -48,6 +86,10 @@ class SearchPhotosProvider extends ChangeNotifier {
         query: _queryProvider.query,
         page: 1,
         perPage: perPage,
+        color: _color,
+        contentFilter: _contentFilter,
+        orderBy: _orderBy,
+        orientation: _orientation,
       );
       final canLoadMore = photos.length == perPage;
 
@@ -68,6 +110,10 @@ class SearchPhotosProvider extends ChangeNotifier {
         query: _queryProvider.query,
         page: nextPage,
         perPage: perPage,
+        color: _color,
+        contentFilter: _contentFilter,
+        orderBy: _orderBy,
+        orientation: _orientation,
       );
       final canLoadMore = photos.length == perPage;
 

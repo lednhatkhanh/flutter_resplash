@@ -24,8 +24,8 @@ dependencies:
   flutter:
     sdk: flutter
   http: ^0.12.2
-  url_launcher: 5.5.0
-  share: ">=0.6.4+5 <2.0.0"
+  url_launcher: 5.5.2
+  share: ">=0.6.5 <2.0.0"
   provider: ^4.3.2+1
   flutter_downloader: ^1.5.0
   path_provider: ^1.6.14
@@ -40,7 +40,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  pedantic: ^1.9.0
+  pedantic: 1.9.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -54,6 +54,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/placeholder.jpg
+    - assets/images/undraw_location_search.png
     - .env.json
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
