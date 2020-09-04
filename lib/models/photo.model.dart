@@ -1,4 +1,4 @@
-import 'inline_user.model.dart';
+import 'user.model.dart';
 
 class Photo {
   final String id;

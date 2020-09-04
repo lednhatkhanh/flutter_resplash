@@ -12,7 +12,7 @@ import 'package:re_splash/screens/photo_details/utils/download_utils.dart';
 import 'package:re_splash/screens/photo_details/widgets/photo_details_exif.dart';
 import 'package:re_splash/screens/photo_details/widgets/photo_details_statics.dart';
 import 'package:re_splash/screens/photo_details/widgets/photo_details_tags.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:re_splash/utils/open_link.dart';
 import 'photo_details_header.dart';
 
 class PhotoDetailsBody extends StatefulWidget {
@@ -119,9 +119,7 @@ class _PhotoDetailsBodyState extends State<PhotoDetailsBody>
 
     final url =
         'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude';
-    if (await canLaunch(url)) {
-      await launch(url);
-    }
+    openLink(context, url);
   }
 
   @override

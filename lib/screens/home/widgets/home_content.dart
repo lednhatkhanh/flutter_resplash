@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:re_splash/models/collection.model.dart';
 import 'package:re_splash/data/collections.data.dart';
-import 'package:re_splash/widgets/collection_item.dart';
-import 'package:re_splash/widgets/photo_item.dart';
 import 'package:re_splash/widgets/item_list.dart';
 import 'package:re_splash/models/photo.model.dart';
 import 'package:re_splash/data/photos.data.dart';
@@ -80,15 +78,6 @@ class _HomeContentState extends State<HomeContent>
     }
   }
 
-  Widget _renderPhotoItem({Photo item, double width}) =>
-      PhotoItem(photo: item, width: width);
-
-  Widget _renderCollectionItem({Collection item, double width}) =>
-      CollectionItem(
-        collection: item,
-        width: width,
-      );
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -148,7 +137,6 @@ class _HomeContentState extends State<HomeContent>
                       items: value.photos,
                       loadMore: value.getMorePhotos,
                       isLoading: value.isLoading,
-                      renderItem: _renderPhotoItem,
                     ),
                   ),
                 ],
@@ -161,7 +149,6 @@ class _HomeContentState extends State<HomeContent>
                       isLoading: value.isLoading,
                       loadMore: value.getMoreCollections,
                       items: value.collections,
-                      renderItem: _renderCollectionItem,
                     ),
                   ),
                 ],

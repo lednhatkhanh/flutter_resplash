@@ -2,8 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:re_splash/screens/photo_details/widgets/photo_details_action_button.dart';
 import 'package:re_splash/screens/photo_details/widgets/photo_details_body.dart';
+import 'package:re_splash/utils/open_link.dart';
 import 'package:share/share.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import 'package:re_splash/models/photo.model.dart';
 
@@ -30,9 +30,7 @@ class _PhotoDetailsContentState extends State<PhotoDetailsContent> {
   void _openInBrowser() async {
     final url = photo.links.html;
 
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {}
+    openLink(context, url);
   }
 
   void _handleShare() {

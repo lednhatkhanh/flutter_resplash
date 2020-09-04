@@ -1,4 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:re_splash/models/collection.model.dart';
+import 'package:re_splash/models/photo.model.dart';
+import 'package:re_splash/widgets/collection_item.dart';
+import 'package:re_splash/widgets/photo_item.dart';
+
+Widget _renderDefaultItem<T>({@required T item, double width}) => T == Photo
+    ? PhotoItem(photo: item as Photo, width: width)
+    : CollectionItem(
+        collection: item as Collection,
+        width: width,
+      );
 
 class ItemList<T> extends StatefulWidget {
   final List<T> items;
@@ -13,7 +24,7 @@ class ItemList<T> extends StatefulWidget {
     @required this.items,
     @required this.loadMore,
     @required this.isLoading,
-    @required this.renderItem,
+    this.renderItem,
     this.canLoadMore = true,
     this.header,
     this.empty,
@@ -61,7 +72,7 @@ class _ItemListState<T> extends State<ItemList<T>> {
   Widget build(BuildContext context) {
     final horizontalPadding = 15.0;
 
-    if (widget.isLoading) {
+    if (widget.isLoading && _itemCount == 0) {
       return Container(
         alignment: Alignment.center,
         child: CircularProgressIndicator(),
@@ -94,6 +105,13 @@ class _ItemListState<T> extends State<ItemList<T>> {
                   child: CircularProgressIndicator(),
                 )
               : Container(height: 0);
+        }
+
+        if (T == Photo || T == Collection) {
+          return _renderDefaultItem<T>(
+            item: widget.items[index],
+            width: MediaQuery.of(context).size.width - horizontalPadding,
+          );
         }
 
         return widget.renderItem(

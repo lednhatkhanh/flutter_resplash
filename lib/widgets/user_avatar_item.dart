@@ -3,19 +3,19 @@ import 'package:flutter/material.dart';
 const double imageSize = 35;
 
 class UserAvatarItem extends StatelessWidget {
-  final String _image;
-  final String _name;
+  final void Function() onTap;
+  final String image;
+  final String name;
 
   const UserAvatarItem({
     Key key,
-    @required String image,
-    @required String name,
-  })  : _image = image,
-        _name = name,
-        super(key: key);
+    @required this.image,
+    @required this.name,
+    this.onTap,
+  }) : super(key: key);
 
   String _getCalculatedImage(double devicePixelRatio) {
-    final parsedProfileImageUrl = Uri.parse(_image);
+    final parsedProfileImageUrl = Uri.parse(image);
 
     return parsedProfileImageUrl.replace(
       queryParameters: {
@@ -31,26 +31,27 @@ class UserAvatarItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final devicePixelRatio = MediaQuery.of(context).devicePixelRatio;
 
-    return Row(
-      children: [
-        Container(
-          width: imageSize,
-          height: imageSize,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            image: DecorationImage(
-              image: NetworkImage(_getCalculatedImage(devicePixelRatio)),
+    return GestureDetector(
+      onTap: onTap,
+      child: Row(
+        children: [
+          Container(
+            width: imageSize,
+            height: imageSize,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                image: NetworkImage(_getCalculatedImage(devicePixelRatio)),
+              ),
             ),
           ),
-        ),
-        const SizedBox(
-          width: 10,
-        ),
-        Text(
-          _name,
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-      ],
+          const SizedBox(width: 10),
+          Text(
+            name,
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
     );
   }
 }

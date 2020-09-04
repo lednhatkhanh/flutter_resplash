@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:re_splash/models/collection.model.dart';
 import 'package:re_splash/models/photo.model.dart';
+import 'package:re_splash/models/user.model.dart';
 
 class Parser {
   static List<Photo> parsePhotos(dynamic jsonData) {
@@ -30,5 +31,9 @@ class Parser {
     return (json.decode(jsonData)['results'] as List<dynamic>)
         .map((e) => Collection.fromJson(e))
         .toList();
+  }
+
+  static User parseUser(dynamic jsonData) {
+    return User.fromJson(json.decode(jsonData));
   }
 }

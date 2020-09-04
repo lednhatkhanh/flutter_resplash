@@ -1,4 +1,4 @@
-import 'inline_user.model.dart';
+import 'user.model.dart';
 import 'photo.model.dart';
 
 class Collection {

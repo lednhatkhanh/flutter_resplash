@@ -6,8 +6,6 @@ import 'package:re_splash/screens/search/providers/query.provider.dart';
 import 'package:re_splash/screens/search/providers/search_collections.provider.dart';
 import 'package:re_splash/screens/search/providers/search_photos.provider.dart';
 import 'package:re_splash/screens/search/widgets/search_photos_filter_button.dart';
-import 'package:re_splash/widgets/collection_item.dart';
-import 'package:re_splash/widgets/photo_item.dart';
 import 'package:re_splash/widgets/item_list.dart';
 import 'package:re_splash/models/photo.model.dart';
 
@@ -86,15 +84,6 @@ class _SearchContentState extends State<SearchContent>
     _searchInputController.clear();
   }
 
-  Widget _renderPhotoItem({Photo item, double width}) =>
-      PhotoItem(photo: item, width: width);
-
-  Widget _renderCollectionItem({Collection item, double width}) =>
-      CollectionItem(
-        collection: item,
-        width: width,
-      );
-
   @override
   Widget build(BuildContext context) {
     final emptyListWidget = Column(
@@ -168,7 +157,6 @@ class _SearchContentState extends State<SearchContent>
                     loadMore: searchPhotosProvider.loadMorePhotos,
                     canLoadMore: searchPhotosProvider.canLoadMore,
                     isLoading: searchPhotosProvider.isLoading,
-                    renderItem: _renderPhotoItem,
                     empty: emptyListWidget,
                   ),
                 ),
@@ -182,7 +170,6 @@ class _SearchContentState extends State<SearchContent>
                     loadMore: searchCollectionProvider.loadMoreCollections,
                     canLoadMore: searchCollectionProvider.canLoadMore,
                     isLoading: searchCollectionProvider.isLoading,
-                    renderItem: _renderCollectionItem,
                     empty: emptyListWidget,
                   ),
                 ),

@@ -1,7 +1,7 @@
 import 'package:provider/provider.dart';
+import 'package:re_splash/utils/open_link.dart';
 import 'package:share/share.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import 'package:re_splash/models/collection.model.dart';
 import 'package:re_splash/models/photo.model.dart';
@@ -18,12 +18,10 @@ class CollectionDetailsContent extends StatelessWidget {
   CollectionDetailsContent({@required Collection collection})
       : _collection = collection;
 
-  void _openInBrowser() async {
+  void _openInBrowser(BuildContext context) async {
     final url = _collection.links.html;
 
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {}
+    openLink(context, url);
   }
 
   void _handleShare() {
@@ -56,7 +54,7 @@ class CollectionDetailsContent extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.open_in_browser),
             tooltip: 'Open in browser',
-            onPressed: _openInBrowser,
+            onPressed: () => _openInBrowser(context),
           ),
           PopupMenuButton(
             icon: const Icon(Icons.more_vert),

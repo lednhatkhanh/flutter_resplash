@@ -4,13 +4,25 @@ class User {
   final String name;
   final _Links links;
   final _ProfileImage profileImage;
+  final int totalLikes;
+  final int totalPhotos;
+  final int totalCollections;
+  final String location;
+  final String bio;
+  final String portfolioUrl;
 
   User({
+    this.totalLikes,
+    this.totalPhotos,
+    this.totalCollections,
     this.id,
     this.username,
     this.name,
     this.links,
     this.profileImage,
+    this.location,
+    this.bio,
+    this.portfolioUrl,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -20,6 +32,12 @@ class User {
       name: json['name'],
       links: _Links.fromJson(json['links']),
       profileImage: _ProfileImage.fromJson(json['profile_image']),
+      totalLikes: json['total_likes'],
+      totalPhotos: json['total_photos'],
+      totalCollections: json['total_collections'],
+      location: json['location'],
+      bio: json['bio'],
+      portfolioUrl: json['portfolio_url'],
     );
   }
 }
