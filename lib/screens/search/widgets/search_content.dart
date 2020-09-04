@@ -190,11 +190,11 @@ class _SearchContentState extends State<SearchContent>
             ),
           ],
         ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton:
             _currentTab == 'Photos' && searchPhotosProvider.photos.isNotEmpty
                 ? SearchPhotosFilterButton()
                 : null,
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),
     );
   }
